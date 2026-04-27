@@ -1,0 +1,15 @@
+{
+  "name": "karabiner-config",
+  "scripts": {
+    "build": "tsx karabiner-config.ts",
+    "snapshot": "KARABINER_DRY_RUN=1 tsx karabiner-config.ts",
+    "update": "npm update karabiner.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "karabiner.ts": "latest",
+    "prettier": "^2",
+    "tsx": "^4",
+    "typescript": "^5"
+  }
+}

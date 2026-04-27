@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "moduleResolution": "Node",
+
+    "strict": true,
+    "importsNotUsedAsValues": "error",
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true
+  }
+}
