@@ -82,12 +82,12 @@ The Link namespace is data-driven via `links.json` — add an entry like `"y": "
 A second namespaced command system, but driven by *holding* keys rather than chording them. Hold ⇪ (Caps Lock) to enter Hyper; the notification shows the available sublayers. While ⇪ is still held, hold a sublayer key (e.g. `o`) and tap a letter to fire the action — you can fire several actions before releasing. Tap ⇪ alone (no hold) → ⎋. ⎋ or ⇪ pressed inside a layer state aborts it.
 
 ```
-⇪              → Hyper            (notification: "o_Open w_Window s_Symbol d_Digit x_System v_Move c_Music r_Raycast")
+⇪              → Hyper            (notification: "o_Open w_Window s_Symbol d_Digit x_System v_Move c_Music r_Raycast ␣_Symbol2")
 ⇪ + o          → Open sublayer    (notification: "1 a c d e f g i m n p s t v z")
 ⇪ + o + g      → launch Google Chrome
 ```
 
-Eight sublayers ship out of the box:
+Nine sublayers ship out of the box:
 
 | Sublayer | What it does |
 |---|---|
@@ -99,6 +99,7 @@ Eight sublayers ship out of the box:
 | `v` Move | Arrow / page navigation, app-specific motion chords |
 | `c` Music | Play / pause / forward / rewind |
 | `r` Raycast | Calendar, dictionary, emoji, gitmoji, snippets, clipboard |
+| `␣` Symbol2 | Full-alpha-block symbol layer: shifted-number row on QWERTY, brackets/pipe/minus/equals/backtick/tilde/underscore on home row, digits 1–0 on ZXCVB row |
 
 The Symbol and Digit sublayers duplicate their duo-layer counterparts so the same bindings are reachable either by chord (`s + ;` / `d + ;`) or by hold (⇪ + `s` / ⇪ + `d`).
 

@@ -116,7 +116,7 @@ l;  →  a_App  e_Emoji  g_Gitmoji  l_Link  r_Raycast  s_SystemSetting
 A two-stage hold layer. Hold ⇪ to enter Hyper (notification lists sublayers). While ⇪ is still held, hold a sublayer key (`o` `w` `s` `d` `x` `v` `c` `r`) and tap a binding letter to fire the action. Release ⇪ at any time to exit. **Tap ⇪ alone → ⎋.** **Abort any layer state:** ⎋ or ⇪.
 
 ```
-⇪  →  o_Open  w_Window  s_Symbol  d_Digit  x_System  v_Move  c_Music  r_Raycast
+⇪  →  o_Open  w_Window  s_Symbol  d_Digit  x_System  v_Move  c_Music  r_Raycast  ␣_Symbol2
 ```
 
 ### `o` — Open app
@@ -203,6 +203,25 @@ Same mapping as the [Digit & delete duo-layer](#digit--delete-layer--hold-d---or
 | `g` | ricoberger/gitmoji |
 | `s` | raycast/snippets — Search Snippets |
 | `v` | raycast/clipboard-history |
+
+### `␣` — Symbol2
+
+Full-alpha-block symbol sublayer (hold ⇪ + ␣, then tap a binding key). Top row → shifted numbers, home row → brackets / pipe / minus / equals / backtick / tilde / underscore, bottom row → digits 1–0.
+
+| Key | Output |
+|:---:|:---:|
+| `q` `w` `e` `r` `t` | ! @ # $ % |
+| `y` `u` `i` `o` `p` | ^ & * ( ) |
+| `a` | `` ` `` |
+| `s` | _ |
+| `d` | ~ |
+| `f` `g` | { [ |
+| `h` `j` | ] } |
+| `k` `l` | - = |
+| `;` | \| |
+| `'` | ⌫ |
+| `z` `x` `c` `v` `b` | 1 2 3 4 5 |
+| `n` `m` `,` `.` `/` | 6 7 8 9 0 |
 
 ---
 
