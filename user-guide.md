@@ -82,21 +82,25 @@ The Link namespace is data-driven via `links.json` — add an entry like `"y": "
 A second namespaced command system, but driven by *holding* keys rather than chording them. Hold ⇪ (Caps Lock) to enter Hyper; the notification shows the available sublayers. While ⇪ is still held, hold a sublayer key (e.g. `o`) and tap a letter to fire the action — you can fire several actions before releasing. Tap ⇪ alone (no hold) → ⎋. ⎋ or ⇪ pressed inside a layer state aborts it.
 
 ```
-⇪              → Hyper            (notification: "o_Open w_Window s_System v_Move c_Music r_Raycast")
+⇪              → Hyper            (notification: "o_Open w_Window s_Symbol d_Digit x_System v_Move c_Music r_Raycast")
 ⇪ + o          → Open sublayer    (notification: "1 a c d e f g i m n p s t v z")
 ⇪ + o + g      → launch Google Chrome
 ```
 
-Six sublayers ship out of the box:
+Eight sublayers ship out of the box:
 
 | Sublayer | What it does |
 |---|---|
 | `o` Open | Launch / focus an app |
 | `w` Window | Window halves, display switching, ⌘/⌃ chord shortcuts |
-| `s` System | Volume, brightness, lock, DND, dark mode, camera |
+| `s` Symbol | Same mapping as the Symbol duo-layer (`! @ # $ % ^ & * ( )`, brackets, `_ +`) |
+| `d` Digit | Same mapping as the Digit duo-layer (numpad, `+ - * /`, ⌫ family) |
+| `x` System | Volume, brightness, lock, DND, dark mode, camera |
 | `v` Move | Arrow / page navigation, app-specific motion chords |
 | `c` Music | Play / pause / forward / rewind |
 | `r` Raycast | Calendar, dictionary, emoji, gitmoji, snippets, clipboard |
+
+The Symbol and Digit sublayers duplicate their duo-layer counterparts so the same bindings are reachable either by chord (`s + ;` / `d + ;`) or by hold (⇪ + `s` / ⇪ + `d`).
 
 The implementation lives in `utils.ts:createHyperLayer`. Holding ⇪ activates a `hyper` variable; holding a sublayer key activates `hyper_sub_<key>`, gated on `hyper = 1` *and* every other `hyper_sub_*` being `0` so two sublayers can't fire simultaneously. Tap ⇪ alone falls through to `configKey(m => m.toIfAlone(toKey('⎋')))`, preserving the Caps-as-Escape behavior.
 

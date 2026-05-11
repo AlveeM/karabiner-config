@@ -113,10 +113,10 @@ l;  →  a_App  e_Emoji  g_Gitmoji  l_Link  r_Raycast  s_SystemSetting
 
 ## Hyper layer — hold ⇪ (Caps Lock)
 
-A two-stage hold layer. Hold ⇪ to enter Hyper (notification lists sublayers). While ⇪ is still held, hold a sublayer key (`o` `w` `s` `v` `c` `r`) and tap a binding letter to fire the action. Release ⇪ at any time to exit. **Tap ⇪ alone → ⎋.** **Abort any layer state:** ⎋ or ⇪.
+A two-stage hold layer. Hold ⇪ to enter Hyper (notification lists sublayers). While ⇪ is still held, hold a sublayer key (`o` `w` `s` `d` `x` `v` `c` `r`) and tap a binding letter to fire the action. Release ⇪ at any time to exit. **Tap ⇪ alone → ⎋.** **Abort any layer state:** ⎋ or ⇪.
 
 ```
-⇪  →  o_Open  w_Window  s_System  v_Move  c_Music  r_Raycast
+⇪  →  o_Open  w_Window  s_Symbol  d_Digit  x_System  v_Move  c_Music  r_Raycast
 ```
 
 ### `o` — Open app
@@ -152,7 +152,15 @@ A two-stage hold layer. Hold ⇪ to enter Hyper (notification lists sublayers). 
 | `n` | ›⌘` (cycle windows in app) |
 | `;` | ›⌘h (hide app) |
 
-### `s` — System
+### `s` — Symbol
+
+Same mapping as the [Symbol duo-layer](#symbol-layer--hold-s---or-hyper--s) — see that section for the table.
+
+### `d` — Digit
+
+Same mapping as the [Digit & delete duo-layer](#digit--delete-layer--hold-d---or-hyper--d), minus the `1`–`9` → F1–F9 row.
+
+### `x` — System
 
 | Key | Action |
 |:---:|:---|
@@ -220,7 +228,7 @@ Arrows on home row; tap layer keys to fire side modifiers (which can then chain 
 
 ---
 
-## Symbol layer — hold `s + ;`
+## Symbol layer — hold `s + ;` (or Hyper + `s`)
 
 ```
   &     !    @    #         ^    {    [    (    $          ?    }    ]    )    %          _    +         ⌫
@@ -250,9 +258,9 @@ Arrows on home row; tap layer keys to fire side modifiers (which can then chain 
 
 ---
 
-## Digit & delete layer — hold `d + ;`
+## Digit & delete layer — hold `d + ;` (or Hyper + `d`)
 
-Numpad layout on home row, F-keys on the digit row, backspace family on the right.
+Numpad layout on home row, F-keys on the digit row, backspace family on the right. **Note:** the F1–F9 row is only available via the `d + ;` duo-layer, not via Hyper + `d`.
 
 ```
   0      1    2    3        4    5    6        7    8    9        +    -    /    *        .          ⌫    ⌥⌫    ⌘⌫    ⌦

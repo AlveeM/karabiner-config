@@ -214,7 +214,7 @@ function rule_hyperLayer() {
         m: toKey(']', '›⌘'),
       },
     },
-    s: {
+    x: {
       name: 'System',
       mapping: {
         u: toKey('volume_increment'),
@@ -229,6 +229,59 @@ function rule_hyperLayer() {
         t: raycastExt('raycast/system/toggle-system-appearance'),
         c: raycastExt('raycast/system/open-camera'),
         v: toKey('␣', '‹⌥'),
+      },
+    },
+    s: {
+      name: 'Symbol',
+      mapping: {
+        y: toKey('/', '⇧'),
+        u: toKey(']', '⇧'),
+        i: toKey(']'),
+        o: toKey(0, '⇧'),
+        p: toKey(5, '⇧'),
+
+        h: toKey(6, '⇧'),
+        j: toKey('[', '⇧'),
+        k: toKey('['),
+        l: toKey(9, '⇧'),
+        ';': toKey(4, '⇧'),
+
+        n: toKey(7, '⇧'),
+        m: toKey(1, '⇧'),
+        ',': toKey(2, '⇧'),
+        '.': toKey(3, '⇧'),
+
+        ']': toKey(8, '⇧'),
+
+        '␣': toKey('-', '⇧'),
+        '⏎': toKey('=', '⇧'),
+
+        "'": toKey('⌫'),
+      },
+    },
+    d: {
+      name: 'Digit',
+      mapping: {
+        n: toKey('keypad_0'),
+        m: toKey('keypad_1'),
+        ',': toKey('keypad_2'),
+        '.': toKey('keypad_3'),
+        j: toKey('keypad_4'),
+        k: toKey('keypad_5'),
+        l: toKey('keypad_6'),
+        u: toKey('keypad_7'),
+        i: toKey('keypad_8'),
+        o: toKey('keypad_9'),
+
+        p: toKey('=', '⇧'),
+        ';': toKey('-'),
+        ']': toKey(8, '⇧'),
+        '[': toKey('keypad_period'),
+
+        '\\': toKey('⌦'),
+        "'": toKey('⌫'),
+        h: toKey('⌫', '⌥'),
+        y: toKey('⌫', '⌘'),
       },
     },
     v: {
