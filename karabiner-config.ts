@@ -212,6 +212,8 @@ function rule_hyperLayer() {
         n: toKey('`', '›⌘'),
         b: toKey('[', '›⌘'),
         m: toKey(']', '›⌘'),
+        ',': toKey('-', '›⌘'),
+        '.': toKey('=', '›⌘'),
       },
     },
     x: {
