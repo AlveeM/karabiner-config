@@ -53,10 +53,7 @@ function main(target: string) {
       app_vsCode(),
       app_cursor(),
       app_slack(),
-      app_warp(),
-      app_spark(),
       app_zoom(),
-      app_chatGPT(),
 
       app_raycast(),
       app_homerow(),
@@ -99,20 +96,14 @@ function rule_leaderKey() {
     a: {
       name: 'App',
       mapping: {
-        a: 'ChatGPT', // AI
-        c: 'Calendar',
-        d: 'Eudb_en', // Dictionary
+        c: 'Google Chrome',
         e: 'Zed', // Editor
         f: 'Finder',
-        g: 'Google Chrome',
-        i: 'WeChat', // IM
-        m: 'Spark Desktop', // Mail
-        r: 'Rider',
+        g: 'Gram',
+        m: 'Spotify', // Music
         s: 'Slack',
-        t: 'Warp', // Terminal
-        u: 'Spotify', // mUsic
-        w: 'WebStorm',
-        z: 'zoom.us',
+        t: 'Ghostty', // Terminal
+        w: 'Zen Browser',
         ';': 'System Settings',
       },
       action: toApp,
@@ -179,21 +170,15 @@ function rule_hyperLayer() {
     o: {
       name: 'Open',
       mapping: {
-        '1': toApp('1Password'),
-        g: toApp('Google Chrome'),
-        c: toApp('Notion Calendar'),
-        v: toApp('Zed'),
-        d: toApp('Discord'),
-        s: toApp('Slack'),
-        e: toApp('Superhuman'),
-        n: toApp('Notion'),
-        t: toApp('Terminal'),
-        z: toApp('zoom.us'),
-        m: toApp('Reflect'),
+        c: toApp('Google Chrome'),
+        e: toApp('Zed'),
         f: toApp('Finder'),
-        i: toApp('Texts'),
-        p: toApp('Spotify'),
-        a: toApp('iA Presenter'),
+        g: toApp('Gram'),
+        m: toApp('Spotify'),
+        s: toApp('Slack'),
+        t: toApp('Ghostty'),
+        w: toApp('Zen Browser'),
+        ';': toApp('System Settings'),
       },
     },
     w: {
@@ -592,7 +577,6 @@ function app_jetBrainsIDE() {
       },
       appendExtras: [
         map('⎋', '⌘').to('⎋', '⌘⇧'),
-        appResize('WebStorm'),
       ],
     }),
   )
@@ -664,18 +648,6 @@ function app_cursor() {
   )
 }
 
-function app_warp() {
-  return rule('Warp', ifApp('^dev.warp.Warp')).manipulators(
-    appCommons({
-      tab: true,
-      appendExtras: [
-        appResize('Warp'),
-        map('⏎', '⇧').to('j', '⌃'),
-      ],
-    }),
-  )
-}
-
 function app_slack() {
   return rule('Slack', ifApp('^com.tinyspeck.slackmacgap$')).manipulators(
     appCommons({
@@ -690,21 +662,6 @@ function app_slack() {
       // After the 1/4 width, leave some space for opening thread in a new
       // window before the last 1/4 width
       appendExtras: [appResize('Slack', { x: 1263, y: 25 }, { w: 1760, h: 1415 })],
-    }),
-  )
-}
-
-function app_spark() {
-  return rule('Spark', ifApp('^com.readdle.SparkDesktop')).manipulators(
-    appCommons({
-      taps: {
-        '‹⌘': toKey('/'), // openSidebar
-        '‹⌥': toKey('r', '⌘'), // fetch
-
-        '›⌘': toKey('/', '⌘'), // changeLayout
-        '›⌥': toKey('k', '⌘'), // actions
-      },
-      appendExtras: [appResize('Spark Desktop', undefined, { w: 1644, h: 1220 })],
     }),
   )
 }
@@ -760,17 +717,6 @@ function app_homerow() {
     mapSimultaneous(['f', 'j']).to('␣', 'Hyper'), // Click
     mapSimultaneous(['f', 'k']).to('⏎', 'Hyper'), // Scroll
   ])
-}
-
-function app_chatGPT() {
-  return rule('ChatGPT', ifApp('^com.openai.chat$')).manipulators(
-    appCommons({
-      prependExtras: [appResize('ChatGPT')],
-      taps: {
-        '‹⌘': toKey('s', '⌘⌃'), // openSidebar
-      },
-    }),
-  )
 }
 
 function keyboard_apple() {
