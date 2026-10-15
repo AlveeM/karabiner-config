@@ -1,2 +1,61 @@
-My [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) [config](https://github.com/evan-liu/karabiner-config/blob/main/karabiner-config.ts) using [karabiner.ts](https://github.com/evan-liu/karabiner.ts).
+# Karabiner Config
 
+My [Karabiner-Elements](https://github.com/pqrs-org/Karabiner-Elements) config, written in TypeScript with [karabiner.ts](https://github.com/evan-liu/karabiner.ts) and based on [evan-liu's config](https://github.com/evan-liu/karabiner-config/blob/main/karabiner-config.ts).
+
+It turns a standard keyboard into a layered input system where your fingers never leave the home row.
+
+## Docs
+
+- [`user-guide.md`](./user-guide.md): how the patterns work and why.
+- [`cheatsheet.md`](./cheatsheet.md): every binding, in tables.
+
+## What's in it
+
+| Pattern | Trigger | What it does |
+|:---|:---|:---|
+| Duo modifiers | Chord two keys (e.g. `f`+`d`) | Acts as ⌘ ⌃ ⌥ ⇧ and combinations, left or right side |
+| Leader key | `l` + `;`, then keys | One-shot commands: launch apps, paste emoji or gitmoji, open links, run Raycast extensions, open System Settings panes |
+| Hyper layer | Hold ⇪, then hold a sublayer key | Burst commands: open apps, window management, symbols, digits, movement, media, system controls |
+| Duo layers | Hold two keys (e.g. `f`+`;`) | Vim arrows, symbols, digits and delete, snippets |
+| System layer | Hold `` ` `` | Mouse warp, sleep, app switch, clear notifications |
+| Tap modifiers | Tap a side modifier (`‹⌘`, `›⌥`, …) | Per-app actions such as sidebar, terminal and command palette |
+| App rules | Automatic per app | Shared back/forward, tab and window navigation, plus window resize on `Meh`+`1` |
+
+```mermaid
+flowchart LR
+    K[Keyboard] --> D[Duo modifiers]
+    K --> L[Leader key]
+    K --> H[Hyper layer]
+    K --> DL[Duo layers]
+    D --> T[Tap modifiers]
+    DL -->|vim layer emits side modifiers| T
+    T --> A[Per-app rules]
+```
+
+Per-app rules cover Chrome, Safari, JetBrains IDEs, Zed, VSCode, Cursor, Slack and Zoom. Hardware rules handle Apple keyboards and the ZSA Moonlander.
+
+## Requirements
+
+- macOS with [Karabiner-Elements](https://karabiner-elements.pqrs.org/)
+- Node, to run the TypeScript config
+- Optional: [Raycast](https://www.raycast.com/) (window management and extensions), [Homerow](https://www.homerow.app/), and a [ZSA Moonlander](https://www.zsa.io/moonlander)
+
+## Usage
+
+```sh
+npm install
+npm run build      # writes the "Default" Karabiner profile
+npm run snapshot   # dry run, leaves the profile untouched
+npm run update     # update karabiner.ts
+```
+
+`build` overwrites rules in the `Default` profile, so back up your Karabiner config first if you have manual rules.
+
+## Layout
+
+| File | Purpose |
+|:---|:---|
+| `karabiner-config.ts` | All rules, layers and app definitions. `main()` lists what's loaded |
+| `layer-engines.ts` | Leader key and Hyper layer state machines |
+| `utils.ts` | Shared helpers: duo and tap modifiers, `appCommons`, Raycast and resize helpers |
+| `links.json` | Data for the leader-key Link namespace |

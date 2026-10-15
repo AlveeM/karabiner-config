@@ -14,7 +14,7 @@ The full binding reference lives in [`cheatsheet.md`](./cheatsheet.md). This gui
 - *Optional:* a [ZSA Moonlander](https://www.zsa.io/moonlander) keyboard — there is dedicated handling for `vendor_id: 12951, product_id: 6505`. Everything else falls under the "Apple Keyboard" rule.
 - *Optional:* [Raycast](https://www.raycast.com/) with the Window Management extension and [Homerow](https://www.homerow.app/) — several rules invoke them.
 
-To apply the config: `npm install`, then run the entrypoint (`npx tsx karabiner-config.ts` or equivalent). It calls `writeToProfile('Default', …)` and writes directly into the Karabiner profile.
+To apply the config: `npm install`, then `npm run build` (`tsx karabiner-config.ts`). It calls `writeToProfile('Default', …)` and writes directly into the Karabiner profile. `npm run snapshot` does a dry run (`KARABINER_DRY_RUN=1`) that doesn't touch the profile.
 
 ---
 
@@ -45,26 +45,37 @@ Combined modifiers chord differently:
 
 The implementation lives in `utils.ts:duoModifiers`. It registers each chord in both orders (`fd` and `df`) and uses `mapSimultaneous` with `key_down_order: 'strict'`, a 150 ms hold threshold, and a 150 ms tap-alone timeout. If you press both keys but neither is held past 150 ms, both letters are emitted unchanged.
 
-**Why this matters:** your fingers never leave home row to reach a modifier, and the most-used modifiers map to the strongest fingers (⌘ → index, ⌃ → index+middle, ⌥ → index+pinky, ⇧ → middle+ring).
+**Why this matters:** your fingers never leave home row to reach a modifier, and the most-used modifiers get the easiest chords (⌘ → index+middle, ⌃ → index+ring, ⌥ → index+pinky, ⇧ → middle+ring). Left-hand chords emit left-side modifiers (`‹⌘`) and right-hand chords emit right-side ones (`›⌘`).
 
 ### 2. Leader key — `l` + `;` for namespaced commands
 
 Pressing `l` and `;` simultaneously enters **leader mode**. A notification shows the available namespaces. Press a namespace key to enter it; press an action key to fire and exit; press ⎋ or ⇪ to abort.
 
 ```
-l + ;       → leader mode      (notification: "a_App e_Emoji g_Gitmoji l_Link r_Raycast s_SystemSetting")
-   a        → app namespace    (notification: "a_ChatGPT c_Calendar d_Eudb_en …")
-   a a      → launch ChatGPT
+ l + ;  ──▶  Leader mode      notification: a_App e_Emoji g_Gitmoji l_Link r_Raycast s_SystemSetting
+   └─ a  ──▶  App namespace   notification: c_GoogleChrome e_Zed f_Finder …
+        └─ c  ──▶  launch Google Chrome (and exit leader mode)
 ```
 
-The implementation in `karabiner-config.ts:rule_leaderKey` is a small state machine driven by a `leader` variable:
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> Inactive
+    Inactive --> Leader: l + ;
+    Leader --> Namespace: a e g l r s
+    Namespace --> Inactive: action key (fires action)
+    Leader --> Inactive: ⎋ or ⇪
+    Namespace --> Inactive: ⎋ or ⇪
+```
 
-- `0` (inactive) — only the `l;` chord matches, sets `leader = 1`, shows top-level hint.
+The implementation is `layer-engines.ts:createLeaderLayer` (configured by `rule_leaderKey` in `karabiner-config.ts`), a small state machine driven by a `leader` variable:
+
+- `0` (inactive) — only the `l;` chord (250 ms window) matches, sets `leader = 1`, shows top-level hint.
 - `1` (leader) — namespace keys (`a` `e` `g` `l` `r` `s`) set `leader = <key>` and show the namespace's hint.
 - `<namespace>` — action keys fire the action and reset `leader = 0`.
 - ⎋ or ⇪ in any non-zero state aborts and dismisses the notification.
 
-Five namespaces ship out of the box:
+Six namespaces ship out of the box:
 
 | Namespace | What it does | Action |
 |---|---|---|
@@ -82,9 +93,21 @@ The Link namespace is data-driven via `links.json` — add an entry like `"y": "
 A second namespaced command system, but driven by *holding* keys rather than chording them. Hold ⇪ (Caps Lock) to enter Hyper; the notification shows the available sublayers. While ⇪ is still held, hold a sublayer key (e.g. `o`) and tap a letter to fire the action — you can fire several actions before releasing. Tap ⇪ alone (no hold) → ⎋. ⎋ or ⇪ pressed inside a layer state aborts it.
 
 ```
-⇪              → Hyper            (notification: "o_Open w_Window s_Symbol d_Digit x_System v_Move c_Music r_Raycast ␣_Symbol2")
-⇪ + o          → Open sublayer    (notification: "1 a c d e f g i m n p s t v z")
-⇪ + o + g      → launch Google Chrome
+ hold ⇪          ──▶  Hyper            notification: o_Open w_Window s_Symbol d_Digit x_System v_Move c_Music r_Raycast ␣_Symbol2
+   └─ + o        ──▶  Open sublayer    notification: Open: 1 g c v d s e n t z m f i p a
+        └─ tap g ──▶  launch Google Chrome (⇪ and o stay held — fire more actions)
+```
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> Idle
+    Idle --> Hyper: hold ⇪
+    Hyper --> Sublayer: hold o w s d x v c r ␣
+    Sublayer --> Sublayer: tap binding (fires action)
+    Sublayer --> Hyper: release sublayer key, or ⎋ / ⇪
+    Hyper --> Idle: release ⇪, or ⎋ / ⇪
+    Idle --> Idle: tap ⇪ alone → ⎋
 ```
 
 Nine sublayers ship out of the box:
@@ -92,7 +115,7 @@ Nine sublayers ship out of the box:
 | Sublayer | What it does |
 |---|---|
 | `o` Open | Launch / focus an app |
-| `w` Window | Window halves, display switching, ⌘/⌃ chord shortcuts |
+| `w` Window | Window halves, display switching, window/tab cycling, zoom in/out |
 | `s` Symbol | Same mapping as the Symbol duo-layer (`! @ # $ % ^ & * ( )`, brackets, `_ +`) |
 | `d` Digit | Same mapping as the Digit duo-layer (numpad, `+ - * /`, ⌫ family) |
 | `x` System | Volume, brightness, lock, DND, dark mode, camera |
@@ -103,13 +126,13 @@ Nine sublayers ship out of the box:
 
 The Symbol and Digit sublayers duplicate their duo-layer counterparts so the same bindings are reachable either by chord (`s + ;` / `d + ;`) or by hold (⇪ + `s` / ⇪ + `d`).
 
-The implementation lives in `utils.ts:createHyperLayer`. Holding ⇪ activates a `hyper` variable; holding a sublayer key activates `hyper_sub_<key>`, gated on `hyper = 1` *and* every other `hyper_sub_*` being `0` so two sublayers can't fire simultaneously. Tap ⇪ alone falls through to `configKey(m => m.toIfAlone(toKey('⎋')))`, preserving the Caps-as-Escape behavior.
+The implementation lives in `layer-engines.ts:createHyperLayer`. Holding ⇪ activates a `hyper` variable; holding a sublayer key activates `hyper_sub_<key>`, gated on `hyper = 1` *and* every other `hyper_sub_*` being `0` so two sublayers can't fire simultaneously. Tap ⇪ alone falls through to `configKey(m => m.toIfAlone(toKey('⎋')))`, preserving the Caps-as-Escape behavior.
 
 **How this differs from the leader.** The leader is *chord then tap*: chord `l + ;`, release, then tap a namespace key, then tap an action key — a tap sequence that fires once. Hyper is *hold while typing*: keep ⇪ held, keep a sublayer key held, and tap action keys repeatedly. Use the leader for one-shot commands; use Hyper for commands you fire in bursts (e.g. window management while triaging tabs).
 
 ### 4. Duo layers — hold two keys to enter a temporary layer
 
-A layer remaps the entire keyboard while it's active. Four duo-layers are defined; each is entered by *holding* two specific keys together (250 ms threshold) and exited the moment either key is released.
+A layer remaps the entire keyboard while it's active. Four duo-layers are defined; each is entered by *holding* two specific keys together and exited the moment either key is released. Vim, Symbol and Digit use a 250 ms activation window (`.threshold(250)`); Snippet uses the 50 ms global default.
 
 | Layer | Trigger | Purpose |
 |---|---|---|
@@ -122,9 +145,9 @@ There is also one regular (non-duo) layer:
 
 | Layer | Trigger | Purpose |
 |---|---|---|
-| **System** | `` ` `` (backtick) | Mouse warp, sleep, app switch, clear notifications |
+| **System** | hold `` ` `` (backtick) | Mouse warp, sleep, app switch, clear notifications |
 
-Each layer has a `notification(...)` hint string showing the physical-key layout (e.g. the vim layer shows `H J K L → ← ↓ ↑ →`). The hints are also reproduced in the cheatsheet.
+The Vim, Symbol and Digit layers have a `notification(...)` hint string showing their layout (e.g. the vim layer shows `← ↓ ↑ →` above `H J K L`). The layouts are drawn in the cheatsheet.
 
 A small but important detail: inside the vim layer, holding `;`/`d`/`s`/`a` produces *side-specific* modifiers (`›⇧` `‹⌘` `‹⌃` `‹⌥`). This means the vim layer can hand off to the per-app tap-modifier rules (next pattern) without leaving home row.
 
@@ -137,15 +160,11 @@ Per-app rules use `utils.ts:tapModifiers`, which exploits `karabiner.ts`'s `toIf
 
 The convention used throughout the config:
 
-```
-‹⌘ — show / hide left UI (sidebar, file tree)
-‹⌥ — run current task / re-run / refresh
-‹⌃ — run-list / debug
-
-›⌘ — show / hide right UI (terminal, web inspector, right panel)
-›⌥ — command palette (⌘K, ⌘⇧A, ⌘⇧P)
-›⌃ — history / recent files
-```
+| | Left side (`‹`) | Right side (`›`) |
+|:---:|:---|:---|
+| **⌘** | show / hide left UI (sidebar, file tree) | show / hide right UI (terminal, web inspector, right panel) |
+| **⌥** | run current task / re-run / refresh | command palette (⌘K, ⌘⇧A, ⌘⇧P) |
+| **⌃** | run list / debug | history / recent files |
 
 Concrete example from `app_zed`:
 
@@ -164,7 +183,7 @@ So in Zed, **tap right-⌘** to open the terminal, **tap left-⌘** to close all
 
 ### 6. Per-app overrides — `ifApp` rules layered on top
 
-Each app gets a `rule(name, ifApp(bundleId)).manipulators(…)`. Three reusable mixins from `utils.ts` cover the common ergonomics:
+Each app gets a `rule(name, ifApp(bundleId)).manipulators(appCommons({ … }))`. `utils.ts:appCommons` composes three reusable nav mixins plus your own bindings:
 
 ```ts
 historyNavi()  // ⌃H ⌃L → ⌘[ ⌘]   (back/forward)
@@ -172,21 +191,23 @@ tabNavi()      // ⌥H ⌥L → ⌘⇧[ ⌘⇧] (prev/next tab)
 switcher()     // ⌘⌥⌃H ⌘⌥⌃L → ⌃⇧⇥ ⌃⇥ (prev/next window or workspace)
 ```
 
-A typical app rule combines mixins, tap-modifiers, and one-off bindings:
+Options are `history`, `tab`, `switcher` (booleans), `prependExtras`, `taps` (tap-modifiers) and `appendExtras`, always emitted in that order. A typical app rule:
 
 ```ts
-rule('Chrome', ifApp('^com.google.Chrome$')).manipulators([
-  ...historyNavi(),
-  ...tabNavi(),
-  ...switcher(),
-  ...tapModifiers({ … }),
-  map(1, 'Meh').to(toResizeWindow('Google Chrome')),
-])
+rule('Chrome', ifApp('^com.google.Chrome$')).manipulators(
+  appCommons({
+    history: true,
+    tab: true,
+    switcher: true,
+    taps: { '‹⌥': toKey('r', '⌘'), … },
+    appendExtras: [appResize('Google Chrome')],
+  }),
+)
 ```
 
-The `Meh+1` binding deserves special mention. Meh is a 3-modifier combo (⌥⌃⇧, generated by the Apple keyboard rule from `›⌘+›⇧`), and `toResizeWindow` runs an `osascript` that positions the front window. Default size is the first quarter-width column below the widget area (`{x:0, y:220, w:1262, h:1220}`). Apps with non-standard process names (Slack, Spark, ChatGPT) override the AppleScript target name and/or the geometry.
+The `Meh+1` binding deserves special mention. Meh is a 3-modifier combo (⌥⌃⇧, generated by the Apple keyboard rule from `›⌘+›⇧`), and `appResize(app, position?, size?)` (via `toResizeWindow`) runs an `osascript` that positions the front window. Default geometry is the first quarter-width column below the widget area (`{x:0, y:220, w:1262, h:1220}`). The first argument is the System Events process name, which differs from the app name for some apps (VSCode → `Code`); Slack also overrides the geometry. Cursor has no resize binding.
 
-The configured apps are: Chrome, Safari, JetBrains IDEs (any), Zed, VSCode, Cursor, Warp, Slack, Spark, Zoom, ChatGPT.
+The configured apps are: Chrome, Safari, JetBrains IDEs (any), Zed, VSCode, Cursor, Slack, Zoom.
 
 ---
 
@@ -228,7 +249,7 @@ Two rules apply globally regardless of app:
 
 **Homerow** (`app_homerow`) — chord `f + j` to click and `f + k` to scroll, mapping to Hyper+␣ and Hyper+⏎ which Homerow listens for. This makes Homerow's mouseless navigation reachable from the home row without a dedicated trigger key.
 
-Note the chord overlap: `f + j` is also a duo modifier (`fd`/`jk` are ⌘) — but `f + j` specifically is reserved for Homerow.
+`f + j` and `f + k` are deliberately not used by any duo modifier, so they're free for Homerow.
 
 ---
 
@@ -244,11 +265,11 @@ All thresholds are in `karabiner-config.ts`:
 }
 ```
 
-Plus three per-rule values:
+Plus three per-rule or per-layer values:
 
 - **Duo modifier hold** — `to_if_held_down_threshold_milliseconds: 150` and `to_if_alone_timeout_milliseconds: 150` (in `utils.ts:duoModifiers`). Below 150 ms = tap (emit letters); above 150 ms = hold (stay as modifier).
 - **Leader chord** — 250 ms simultaneous window for `l + ;` (in `rule_leaderKey`).
-- **Duo-layer notification window** — each duo-layer's `.threshold(250)` — vim, symbol, and digit layers all use 250 ms; the snippet layer uses the default.
+- **Duo-layer activation window** — each duo-layer's `.threshold(250)` overrides the 50 ms global: vim, symbol, and digit layers use 250 ms; the snippet layer uses the default.
 
 If duo modifiers feel "sticky" (chords firing when you didn't mean them) lower the 50 ms threshold; if they feel "missy" (chords not registering) raise it. The 150 ms hold threshold tunes how long you must hold before the chord becomes a modifier rather than two letters.
 
@@ -257,7 +278,8 @@ If duo modifiers feel "sticky" (chords firing when you didn't mean them) lower t
 ## Files
 
 - `karabiner-config.ts` — all rules, layers, and app definitions. Top-level `main()` lists what's loaded.
-- `utils.ts` — `duoModifiers`, `tapModifiers`, `historyNavi`, `tabNavi`, `switcher`, `raycastExt`, `raycastWin`, `toResizeWindow`, `toClearNotifications`, `toSystemSetting`.
+- `layer-engines.ts` — `createLeaderLayer` and `createHyperLayer`, the state machines behind the leader key and Hyper layer.
+- `utils.ts` — `duoModifiers`, `tapModifiers`, `appCommons`, `historyNavi`, `tabNavi`, `switcher`, `appResize`, `toResizeWindow`, `raycastExt`, `raycastWin`, `toClearNotifications`, `toSystemSetting`.
 - `links.json` — leader-key Link namespace data.
 
 Adding a new binding means editing one of these and re-running the script — Karabiner picks up the new profile JSON immediately.

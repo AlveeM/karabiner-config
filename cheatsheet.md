@@ -26,7 +26,7 @@ Hold two keys (≤ 50 ms apart, ≥ 150 ms held) → modifier. Tap quickly → l
 
 > **Sides:** left-hand chords emit left-side modifiers (`‹⌘`), right-hand chords emit right-side modifiers (`›⌘`).
 
-> **Reserved exception:** `f + j` is **not** a duo modifier — it's reserved for Homerow (Click). See [Global bindings](#global-bindings).
+> **Reserved chords:** `f + j` and `f + k` are **not** duo modifiers — they're reserved for Homerow (Click / Scroll). See [Global bindings](#global-bindings).
 
 ---
 
@@ -35,27 +35,29 @@ Hold two keys (≤ 50 ms apart, ≥ 150 ms held) → modifier. Tap quickly → l
 **Trigger:** `l` + `;` simultaneously (≤ 250 ms). Notification shows the available namespaces. Press a namespace key, then an action key. **Abort:** ⎋ or ⇪ at any time.
 
 ```
-l;  →  a_App  e_Emoji  g_Gitmoji  l_Link  r_Raycast  s_SystemSetting
+ l + ;  ──▶  leader mode
+              ├─ a  App
+              ├─ e  Emoji
+              ├─ g  Gitmoji
+              ├─ l  Link
+              ├─ r  Raycast
+              └─ s  SystemSetting
+
+ e.g.  l + ;   a   g    →  launch Google Chrome
 ```
 
 ### `a` — App (launches via `toApp`)
 
 | Key | App |
 |:---:|:---|
-| `a` | ChatGPT |
-| `c` | Calendar |
-| `d` | Eudb_en (dictionary) |
+| `c` | Google Chrome |
 | `e` | Zed (editor) |
 | `f` | Finder |
-| `g` | Google Chrome |
-| `i` | WeChat (IM) |
-| `m` | Spark Desktop (mail) |
-| `r` | Rider |
+| `g` | Gram |
+| `m` | Spotify (music) |
 | `s` | Slack |
-| `t` | Warp (terminal) |
-| `u` | Spotify (mUsic) |
-| `w` | WebStorm |
-| `z` | zoom.us |
+| `t` | Ghostty (terminal) |
+| `w` | Zen Browser |
 | `;` | System Settings |
 
 ### `e` — Emoji (pasted)
@@ -118,28 +120,33 @@ l;  →  a_App  e_Emoji  g_Gitmoji  l_Link  r_Raycast  s_SystemSetting
 A two-stage hold layer. Hold ⇪ to enter Hyper (notification lists sublayers). While ⇪ is still held, hold a sublayer key (`o` `w` `s` `d` `x` `v` `c` `r`) and tap a binding letter to fire the action. Release ⇪ at any time to exit. **Tap ⇪ alone → ⎋.** **Abort any layer state:** ⎋ or ⇪.
 
 ```
-⇪  →  o_Open  w_Window  s_Symbol  d_Digit  x_System  v_Move  c_Music  r_Raycast  ␣_Symbol2
+ hold ⇪  ──▶  Hyper
+               ├─ o  Open
+               ├─ w  Window
+               ├─ s  Symbol
+               ├─ d  Digit
+               ├─ x  System
+               ├─ v  Move
+               ├─ c  Music
+               ├─ r  Raycast
+               └─ ␣  Symbol2
+
+ e.g.  hold ⇪ + o,  tap g   →  launch Google Chrome
 ```
 
 ### `o` — Open app
 
 | Key | App |
 |:---:|:---|
-| `1` | 1Password |
-| `a` | iA Presenter |
-| `c` | Notion Calendar |
-| `d` | Discord |
-| `e` | Superhuman |
+| `c` | Google Chrome |
+| `e` | Zed |
 | `f` | Finder |
-| `g` | Google Chrome |
-| `i` | Texts |
-| `m` | Reflect |
-| `n` | Notion |
-| `p` | Spotify |
+| `g` | Gram |
+| `m` | Spotify |
 | `s` | Slack |
-| `t` | Terminal |
-| `v` | Zed |
-| `z` | zoom.us |
+| `t` | Ghostty |
+| `w` | Zen Browser |
+| `;` | System Settings |
 
 ### `w` — Window
 
@@ -152,6 +159,7 @@ A two-stage hold layer. Hold ⇪ to enter Hyper (notification lists sublayers). 
 | `u` / `i` | ›⌃⇧⇥ / ›⌃⇥ (prev / next switcher) |
 | `b` / `m` | ›⌘[ / ›⌘] (back / forward) |
 | `n` | ›⌘` (cycle windows in app) |
+| `,` / `.` | ›⌘- / ›⌘= (zoom out / in) |
 | `;` | ›⌘h (hide app) |
 
 ### `s` — Symbol
@@ -232,9 +240,12 @@ Full-alpha-block symbol sublayer (hold ⇪ + ␣, then tap a binding key). Top r
 Arrows on home row; tap layer keys to fire side modifiers (which can then chain into per-app tap-modifier actions).
 
 ```
-                                   '    \
-  ‹⌥   ‹⌃   ‹⌘       ←    ↓    ↑    →    ›⇧    ⌫    ⌦
-   A     S     D         H      J     K     L     ;
+ Layer key:   f + ;
+
+ key      a    s    d    ·    ·    h    j    k    l    ;    '    \
+ output   ‹⌥   ‹⌃   ‹⌘             ←    ↓    ↑    →    ›⇧   ⌫    ⌦
+          └─ left-side mods ─┘     └─ arrows ──────┘    │
+                                                        └─ right-side ⇧
 ```
 
 | Key | Output |
@@ -252,8 +263,11 @@ Arrows on home row; tap layer keys to fire side modifiers (which can then chain 
 ## Symbol layer — hold `s + ;` (or Hyper + `s`)
 
 ```
-  &     !    @    #         ^    {    [    (    $          ?    }    ]    )    %          _    +         ⌫
-  N    M     ,     .         H    J    K    L    ;          Y    U    I     O    P          ␣    ⏎         '
+ key      y    u    i    o    p            n    m    ,    .
+ output   ?    }    ]    )    %            &    !    @    #
+
+ key      h    j    k    l    ;            ]    ␣    ⏎    '
+ output   ^    {    [    (    $            *    _    +    ⌫
 ```
 
 | Key | Symbol |
@@ -284,8 +298,14 @@ Arrows on home row; tap layer keys to fire side modifiers (which can then chain 
 Numpad layout on home row, F-keys on the digit row, backspace family on the right. **Note:** the F1–F9 row is only available via the `d + ;` duo-layer, not via Hyper + `d`.
 
 ```
-  0      1    2    3        4    5    6        7    8    9        +    -    /    *        .          ⌫    ⌥⌫    ⌘⌫    ⌦
-  N     M    ,     .        J    K    L        U    I    O        P    ;     /    ]        [          '      H        Y      \
+ key      u    i    o    p            y        h        '
+ output   7    8    9    +            ⌘⌫       ⌥⌫       ⌫
+
+ key      j    k    l    ;            [        \
+ output   4    5    6    -            .        ⌦
+
+ key      n    m    ,    .    /
+ output   0    1    2    3    /        (top number row: 1–9 → F1–F9, duo-layer only)
 ```
 
 | Key | Output |
@@ -393,7 +413,7 @@ Mixins: history, tab, switcher · Resize: `Meh + 1`
 | ›⌘ | ⌘⌥I — Web Inspector |
 
 ### JetBrains IDEs (`com.jetbrains.*`)
-Mixins: history, tab, switcher · Extra: ⌘⎋ → ⌘⇧⎋ · Resize: `Meh + 1` (targets WebStorm)
+Mixins: history, tab, switcher · Extra: ⌘⎋ → ⌘⇧⎋
 | Tap | Action |
 |:---:|:---|
 | ‹⌘ | ⌘⇧⎋ — hide all tool windows |
@@ -434,9 +454,6 @@ Mixins: tab, switcher · Extras: ⌃H → ⌃-, ⌃L → ⌃⇧-
 | ›⌥ | ⌘⇧P — Command Palette |
 | ›⌃ | ⌘P — Quick Open / Go to File |
 
-### Warp (`dev.warp.Warp`)
-Mixins: tab · Extra: ⇧⏎ → ⌃J · Resize: `Meh + 1`
-
 ### Slack (`com.tinyspeck.slackmacgap`)
 Mixins: history · Resize: `Meh + 1` (custom geometry: pos `1263, 25`, size `1760 × 1415`)
 | Tap | Action |
@@ -446,15 +463,6 @@ Mixins: history · Resize: `Meh + 1` (custom geometry: pos `1263, 25`, size `176
 | ›⌘ | ⌘. — hide right bar |
 | ›⌥ | ⌘K — open jumper |
 
-### Spark (`com.readdle.SparkDesktop`)
-Resize: `Meh + 1` (custom size `1644 × 1220`)
-| Tap | Action |
-|:---:|:---|
-| ‹⌘ | `/` — open sidebar |
-| ‹⌥ | ⌘R — fetch |
-| ›⌘ | ⌘/ — change layout |
-| ›⌥ | ⌘K — actions |
-
 ### Zoom (`us.zoom.xos`)
 | Tap | Action |
 |:---:|:---|
@@ -462,12 +470,6 @@ Resize: `Meh + 1` (custom size `1644 × 1220`)
 | ‹⌥ | ⌘⇧S — start / stop screen share |
 | ›⌘ | ⌘⇧V — start / stop video |
 | ›⌥ | ⌘⇧H — show / hide chat panel |
-
-### ChatGPT (`com.openai.chat`)
-Resize: `Meh + 1`
-| Tap | Action |
-|:---:|:---|
-| ‹⌘ | ⌘⌃S — open sidebar |
 
 ---
 
@@ -508,7 +510,7 @@ Resize: `Meh + 1`
 | Meh + 7 | Center two-thirds |
 | Meh + 8 | Maximize |
 
-> Per-app `Meh + 1` overrides this — when an app rule defines `toResizeWindow`, it wins over Raycast's "first fourth".
+> Per-app `Meh + 1` overrides this — when an app rule defines `appResize`, it wins over Raycast's "first fourth".
 
 ### Homerow
 
@@ -557,5 +559,6 @@ Resize: `Meh + 1`
 | Duo-modifier hold-to-modifier | 150 ms | per chord (`utils.ts`) |
 | Duo-modifier tap-alone timeout | 150 ms | per chord (`utils.ts`) |
 | Duo-layer activation window | 50 ms | global `duo_layer.threshold_milliseconds` |
-| Vim / Symbol / Digit layer notification | 250 ms | per layer `.threshold(250)` |
+| Vim / Symbol / Digit duo-layer activation window (overrides the 50 ms global) | 250 ms | per layer `.threshold(250)` |
+| Snippet duo-layer activation window | 50 ms | global default |
 | Leader chord (`l + ;`) window | 250 ms | `mapSimultaneous([…], undefined, 250)` |
