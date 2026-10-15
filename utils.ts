@@ -60,7 +60,9 @@ export function tapModifiers(
   })
 }
 
-/** Modifiers via 2 keys. e.g. f+d -> ⌘ */
+const rightHandKeys = new Set('yuiophjklnm;,./')
+
+/** Modifiers via 2 keys. e.g. f+d -> ⌘ (left hand -> left-side, right hand -> right-side modifier) */
 export function duoModifiers(
   v: Partial<
     Record<
@@ -81,7 +83,9 @@ export function duoModifiers(
       ) as Array<'command' | 'control' | 'option' | 'shift'>
 
       const keyArray = keys.split('') as (LetterKeyCode | KeyAlias)[]
-      const modifierAction = `left_${firstMod}` as const
+      const side = rightHandKeys.has(keyArray[0]) ? 'right' : 'left'
+      const modifierAction = `${side}_${firstMod}` as const
+      const sideRestMods = restMods.map((x) => `${side}_${x}` as const)
 
       for (const orderedKeys of [keyArray, keyArray.toReversed()]) {
         result.push(
@@ -89,10 +93,10 @@ export function duoModifiers(
             key_down_order: 'strict',
             to_after_key_up: [toRemoveNotificationMessage(id)],
           })
-            .to(modifierAction, restMods, { lazy: true })
+            .to(modifierAction, sideRestMods, { lazy: true })
             .toIfHeldDown([
               toNotificationMessage(id, m),
-              toKey(modifierAction, restMods),
+              toKey(modifierAction, sideRestMods),
             ])
             .toIfAlone(orderedKeys.map((x) => toKey(x)))
             .parameters({

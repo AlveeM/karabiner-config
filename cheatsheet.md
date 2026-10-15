@@ -24,6 +24,8 @@ Hold two keys (≤ 50 ms apart, ≥ 150 ms held) → modifier. Tap quickly → l
 | ⌥⌃ | `cx` | `,.` |
 | ⌘⌥⌃ | `vz` | `m/` |
 
+> **Sides:** left-hand chords emit left-side modifiers (`‹⌘`), right-hand chords emit right-side modifiers (`›⌘`).
+
 > **Reserved exception:** `f + j` is **not** a duo modifier — it's reserved for Homerow (Click). See [Global bindings](#global-bindings).
 
 ---
