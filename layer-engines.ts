@@ -1,7 +1,9 @@
 import {
   type ConditionBuilder,
+  type FromKeyParam,
   ifVar,
   layer,
+  type Manipulator,
   type ManipulatorBuilder,
   map,
   mapSimultaneous,
@@ -81,7 +83,7 @@ function formatSubHint<V>(
 function escapeBindings(
   conditions: ConditionBuilder | ConditionBuilder[],
   vars: string[],
-): ManipulatorBuilder[] {
+): Manipulator[] {
   let conds = Array.isArray(conditions) ? conditions : [conditions]
   let toEvents = vars.flatMap((v) => [toUnsetVar(v), toRemoveNotificationMessage(v)])
   return withCondition(...conds)(
@@ -106,7 +108,7 @@ export function createHyperLayer<C extends HyperConfig>(sublayers: C) {
     .configKey((m) => m.toIfAlone(toKey('⎋')))
     .notification(topHint)
 
-  let manipulators: ManipulatorBuilder[] = []
+  let manipulators: Array<Manipulator | ManipulatorBuilder> = []
 
   // Sublayer activation: requires hyper=1 AND all other hyper_sub_*=0.
   for (let k of subKeys) {
@@ -187,7 +189,7 @@ export function createLeaderLayer(config: LeaderConfig): RuleBuilder {
         let subHint = formatSubHint(config[k].mapping, (v) =>
           Array.isArray(v) ? v[1] : v,
         )
-        return map(k).toVar(_var, k).toNotificationMessage(_var, subHint)
+        return map(k as FromKeyParam).toVar(_var, k).toNotificationMessage(_var, subHint)
       }),
     ),
 
@@ -199,7 +201,7 @@ export function createLeaderLayer(config: LeaderConfig): RuleBuilder {
         actionKeys.map((x) => {
           let raw = mapping[x]
           let v = Array.isArray(raw) ? raw[0] : raw
-          return map(x).to(action(v)).to(clearLeaderVar)
+          return map(x as FromKeyParam).to(action(v)).to(clearLeaderVar)
         }),
       )
     }),
