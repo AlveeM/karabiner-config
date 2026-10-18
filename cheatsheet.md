@@ -57,6 +57,7 @@ Hold two keys (≤ 50 ms apart, ≥ 150 ms held) → modifier. Tap quickly → l
 | `m` | Spotify (music) |
 | `s` | Slack |
 | `t` | Ghostty (terminal) |
+| `v` | Zoom |
 | `w` | Zen Browser |
 | `;` | System Settings |
 
@@ -145,6 +146,7 @@ A two-stage hold layer. Hold ⇪ to enter Hyper (notification lists sublayers). 
 | `m` | Spotify |
 | `s` | Slack |
 | `t` | Ghostty |
+| `v` | Zoom |
 | `w` | Zen Browser |
 | `;` | System Settings |
 

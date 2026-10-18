@@ -103,6 +103,7 @@ function rule_leaderKey() {
         m: 'Spotify', // Music
         s: 'Slack',
         t: 'Ghostty', // Terminal
+        v: 'zoom.us',
         w: 'Zen Browser',
         ';': 'System Settings',
       },
@@ -177,6 +178,7 @@ function rule_hyperLayer() {
         m: toApp('Spotify'),
         s: toApp('Slack'),
         t: toApp('Ghostty'),
+        v: toApp('zoom.us'),
         w: toApp('Zen Browser'),
         ';': toApp('System Settings'),
       },
