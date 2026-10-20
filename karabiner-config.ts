@@ -685,8 +685,6 @@ function app_zoom() {
 
 function app_raycast() {
   return rule('Raycast').manipulators([
-    map('␣', '⌥').to(raycastExt('evan-liu/quick-open/index')),
-
     withModifier('Hyper')({
       '↑': raycastWin('previous-display'),
       '↓': raycastWin('next-display'),

@@ -478,12 +478,6 @@ Mixins: history · Resize: `Meh + 1` (custom geometry: pos `1263, 25`, size `176
 
 ## Global bindings
 
-### Raycast — quick open
-
-| Input | Action |
-|:---:|:---|
-| ⌥ + ␣ | Run `evan-liu/quick-open/index` |
-
 ### Raycast — window management (Hyper = ⌘⌥⌃⇧)
 
 | Input | Action |
