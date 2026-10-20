@@ -361,7 +361,6 @@ A grab-bag layer: paste glyphs, paste arrow / modifier symbols, expand small cod
 | `'` | `⌫"` | Replace `"` cursor pair |
 | `[` | `[ ] ` (Markdown checkbox) | |
 | `]` | `- [ ] ` (Markdown bullet+checkbox) | |
-| `'` | ⌫ | (key, not paste) |
 | `\` | ⌦ | |
 
 ---
@@ -447,16 +446,6 @@ Mixins: tab, switcher · Extras: ⌃H → ⌃-, ⌃L → ⌃⇧- (back / forward
 | ›⌥ | ⌘⇧P — Command Palette |
 | ›⌃ | ⌘P — Quick Open / Go to File |
 
-### Cursor (`com.todesktop.230313mzl4w4u92`)
-Mixins: tab, switcher · Extras: ⌃H → ⌃-, ⌃L → ⌃⇧-
-| Tap | Action |
-|:---:|:---|
-| ‹⌘ | ⌘⎋ — toggle sidebar |
-| ‹⌥ | ⌥⇧R — run |
-| ›⌘ | ⌃` — terminal |
-| ›⌥ | ⌘⇧P — Command Palette |
-| ›⌃ | ⌘P — Quick Open / Go to File |
-
 ### Slack (`com.tinyspeck.slackmacgap`)
 Mixins: history · Resize: `Meh + 1` (custom geometry: pos `1263, 25`, size `1760 × 1415`)
 | Tap | Action |
@@ -528,7 +517,7 @@ Mixins: history · Resize: `Meh + 1` (custom geometry: pos `1263, 25`, size `176
 
 ## Hardware
 
-### Apple keyboard (any non-Moonlander)
+### Non-Moonlander keyboards (Apple and any other)
 
 | Input | Output |
 |:---:|:---|

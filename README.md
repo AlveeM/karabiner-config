@@ -32,7 +32,7 @@ flowchart LR
     T --> A[Per-app rules]
 ```
 
-Per-app rules cover Chrome, Safari, JetBrains IDEs, Zed, VSCode, Cursor, Slack and Zoom. Hardware rules handle Apple keyboards and the ZSA Moonlander.
+Per-app rules cover Chrome, Safari, JetBrains IDEs, Zed, VSCode, Slack and Zoom. Hardware rules handle non-Moonlander keyboards and the ZSA Moonlander.
 
 ## Requirements
 

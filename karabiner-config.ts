@@ -51,14 +51,13 @@ function main(target: string) {
       app_jetBrainsIDE(),
       app_zed(),
       app_vsCode(),
-      app_cursor(),
       app_slack(),
       app_zoom(),
 
       app_raycast(),
       app_homerow(),
 
-      keyboard_apple(),
+      keyboard_nonMoonlander(),
       keyboard_moonlander(),
     ],
     {
@@ -505,7 +504,7 @@ function layer_snippet() {
     map('[').toTypeSequence('[␣]␣'),
     map(']').toTypeSequence('-␣[␣]␣'),
 
-    { "'": toKey('⌫'), '\\': toKey('⌦') },
+    { '\\': toKey('⌦') },
   ])
 }
 
@@ -630,27 +629,6 @@ function app_vsCode() {
   )
 }
 
-function app_cursor() {
-  return rule('Cursor', ifApp('^com.todesktop.230313mzl4w4u92$')).manipulators(
-    appCommons({
-      tab: true,
-      switcher: true,
-      prependExtras: [
-        map('h', '⌃').to('-', '⌃'),
-        map('l', '⌃').to('-', '⌃⇧'),
-      ],
-      taps: {
-        '‹⌘': toKey('⎋', '⌘'), // Tobble Sidebar visibility
-        '‹⌥': toKey('r', '⌥⇧'), // Run
-
-        '›⌘': toKey('`', '⌃'), // terminal
-        '›⌥': toKey('p', '⌘⇧'), // Show Command Palette
-        '›⌃': toKey('p', '⌘'), // Quick Open, Go to File...
-      },
-    }),
-  )
-}
-
 function app_slack() {
   return rule('Slack', ifApp('^com.tinyspeck.slackmacgap$')).manipulators(
     appCommons({
@@ -720,9 +698,9 @@ function app_homerow() {
   ])
 }
 
-function keyboard_apple() {
-  let ifAppleKeyboard = ifDevice({ vendor_id: 12951 }).unless() // Not Moonlander
-  return rule('Apple Keyboard', ifAppleKeyboard).manipulators([
+function keyboard_nonMoonlander() {
+  let ifNotMoonlander = ifDevice({ vendor_id: 12951 }).unless()
+  return rule('Non-Moonlander Keyboards', ifNotMoonlander).manipulators([
     map('⇪', '⇧').to('⇪'),
 
     map('›⌥', '›⇧').toHyper(),

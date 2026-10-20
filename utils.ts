@@ -75,6 +75,8 @@ export function duoModifiers(
 
   for (let [m, k] of Object.entries(v)) {
     for (let keys of k) {
+      // Intentionally `k` (the whole pair list), not `keys`: both hands' chords
+      // for a modifier share one notification slot, so only one indicator shows.
       let id = k + m
       let [firstMod, ...restMods] = (
         m in modifierKeyAliases

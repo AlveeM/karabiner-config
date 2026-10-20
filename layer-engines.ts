@@ -105,7 +105,7 @@ export function createHyperLayer<C extends HyperConfig>(sublayers: C) {
   let topHint = formatTopHint(subKeys.map((k) => ({ key: k, name: sublayers[k].name })))
 
   let layerRule = layer('⇪', 'hyper')
-    .configKey((m) => m.toIfAlone(toKey('⎋')))
+    .configKey((m) => m.toIfAlone(toKey('⎋')), true)
     .notification(topHint)
 
   let manipulators: Array<Manipulator | ManipulatorBuilder> = []
