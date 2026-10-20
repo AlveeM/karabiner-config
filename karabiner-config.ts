@@ -1,3 +1,7 @@
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
+
 import {
   duoLayer,
   ifApp,
@@ -175,6 +179,24 @@ function enabledAppRules() {
   return Object.entries(appRules)
     .filter(([name]) => !disabled.includes(name))
     .map(([, build]) => build())
+}
+
+/**
+ * Writes every app rule to Karabiner's "Add predefined rule" drawer
+ * (assets/complex_modifications), so apps skipped in the profile can still be
+ * enabled from the UI. Rules enabled there are copies: the next build replaces
+ * the profile's rules, so they need re-adding (or removing from disabled-apps.json).
+ */
+function exportAppRulesToDrawer() {
+  let dir = join(homedir(), '.config/karabiner/assets/complex_modifications')
+  let file = join(dir, 'karabiner-config-apps.json')
+  let rules = Object.values(appRules).map((build) => build().build())
+  mkdirSync(dir, { recursive: true })
+  writeFileSync(
+    file,
+    JSON.stringify({ title: 'App rules (karabiner-config)', rules }, null, 2),
+  )
+  console.error(`Exported ${rules.length} app rules to ${file}`)
 }
 
 function main(target: string) {
@@ -729,4 +751,6 @@ function keyboard_moonlander() {
   ])
 }
 
-main(process.env.KARABINER_DRY_RUN ? '--dry-run' : 'Default')
+let dryRun = !!process.env.KARABINER_DRY_RUN
+main(dryRun ? '--dry-run' : 'Default')
+if (!dryRun) exportAppRulesToDrawer()

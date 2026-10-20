@@ -52,7 +52,7 @@ npm run snapshot   # dry run: rewrite snapshot.json, leaves the profile untouche
 npm run snapshot:check  # fail if snapshot.json is out of date
 ```
 
-To skip per-app rules on `build`, list their names in `disabled-apps.json` (e.g. `["slack", "zoom"]`; valid names: `chrome`, `safari`, `jetbrains`, `zed`, `vscode`, `slack`, `zoom`). `snapshot` and `cheatsheet` always include every app.
+To skip per-app rules on `build`, list their names in `disabled-apps.json` (e.g. `["slack", "zoom"]`; valid names: `chrome`, `safari`, `jetbrains`, `zed`, `vscode`, `slack`, `zoom`). `snapshot` and `cheatsheet` always include every app. Every `build` also writes all app rules to Karabiner's drawer (`~/.config/karabiner/assets/complex_modifications/karabiner-config-apps.json`), so skipped apps still appear under Complex Modifications → Add predefined rule, where you can enable them one by one. Rules enabled there are copies and are replaced by the next `build`.
 
 `build` overwrites rules in the `Default` profile, so back up your Karabiner config first if you have manual rules.
 
