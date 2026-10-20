@@ -38,7 +38,7 @@ Per-app rules cover Chrome, Safari, JetBrains IDEs, Zed, VSCode, Slack and Zoom.
 ## Requirements
 
 - macOS with [Karabiner-Elements](https://karabiner-elements.pqrs.org/)
-- Node 20+, to run the TypeScript config
+- Node 20+, to run the TypeScript config. The repo pins Node 24 in `mise.toml`; with [mise](https://mise.jdx.dev/), run `mise trust` once and `mise install`
 - Optional: [Raycast](https://www.raycast.com/) (window management and extensions), [Homerow](https://www.homerow.app/), and a [ZSA Moonlander](https://www.zsa.io/moonlander)
 
 ## Usage

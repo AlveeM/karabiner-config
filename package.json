@@ -1,5 +1,8 @@
 {
   "name": "karabiner-config",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsx karabiner-config.ts",
     "cheatsheet": "tsx generate-cheatsheet.ts",
