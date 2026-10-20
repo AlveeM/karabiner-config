@@ -19,7 +19,8 @@ It turns a standard keyboard into a layered input system where your fingers neve
 | Duo layers | Hold two keys (e.g. `f`+`;`) | Vim arrows, symbols, digits and delete, snippets |
 | System layer | Hold `` ` `` | Mouse warp, sleep, app switch, clear notifications |
 | Tap modifiers | Tap a side modifier (`‹⌘`, `›⌥`, …) | Per-app actions such as sidebar, terminal and command palette |
-| App rules | Automatic per app | Shared back/forward, tab and window navigation |
+| Window management | `Hyper`/`Meh` + keys | Raycast window layouts (thirds, halves, fourths, displays, desktops) and `Meh`+`1`, which resizes the frontmost window in any app |
+| App rules | Automatic per app (skipped by default, see [Usage](#usage)) | Shared back/forward, tab and window navigation |
 
 ```mermaid
 flowchart LR
@@ -32,19 +33,19 @@ flowchart LR
     T --> A[Per-app rules]
 ```
 
-Per-app rules cover Chrome, Safari, JetBrains IDEs, Zed, VSCode, Slack and Zoom. Hardware rules handle non-Moonlander keyboards and the ZSA Moonlander.
+Per-app rules cover Chrome, Safari, JetBrains IDEs, Zed, VSCode, Slack and Zoom. All of them are listed in `disabled-apps.json`, so `npm run build` skips them until you remove a name from that list or enable the rule from Karabiner's drawer. Hardware rules handle non-Moonlander keyboards and the ZSA Moonlander.
 
 ## Requirements
 
 - macOS with [Karabiner-Elements](https://karabiner-elements.pqrs.org/)
-- Node, to run the TypeScript config
+- Node 20+, to run the TypeScript config
 - Optional: [Raycast](https://www.raycast.com/) (window management and extensions), [Homerow](https://www.homerow.app/), and a [ZSA Moonlander](https://www.zsa.io/moonlander)
 
 ## Usage
 
 ```sh
 npm install
-npm run build      # writes the "Default" Karabiner profile
+npm run build      # writes the "Default" Karabiner profile and the app-rule drawer file
 npm run update     # update karabiner.ts
 npm run cheatsheet # regenerate cheatsheet.md from the config
 npm run typecheck
@@ -62,7 +63,9 @@ To skip per-app rules on `build`, list their names in `disabled-apps.json` (e.g.
 |:---|:---|
 | `karabiner-config.ts` | All rules, layers and app definitions. `main()` lists what's loaded |
 | `layer-engines.ts` | Leader key and Hyper layer state machines |
-| `utils.ts` | Shared helpers: duo and tap modifiers, `appCommons`, Raycast and resize helpers |
+| `utils.ts` | Shared helpers: duo and tap modifiers, `appCommons`, Raycast and resize helpers, layer hints (`twoRowHint`) |
+| `describe.ts` | Human-readable key and event names, shared by the layer hints and the cheatsheet generator |
+| `dry-run.ts` | Runs the config in dry-run mode with every app enabled; used by the snapshot and cheatsheet scripts |
 | `snapshot.ts` / `snapshot.json` | Snapshot of the emitted rules, one manipulator per line; run `npm run snapshot` after changing a binding |
 | `generate-cheatsheet.ts` | Generates `cheatsheet.md` from the config's dry-run output |
 | `disabled-apps.json` | Names of per-app rules to skip when running `npm run build` |
