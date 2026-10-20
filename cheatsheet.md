@@ -561,5 +561,4 @@ Hold both trigger keys (≤ 250 ms apart), then tap a binding key.
 | Input | Action |
 | :--- | :--- |
 | `⇧ + ⎋` | ⇪ |
-| `caps_lock + ⎋` | ⇪ |
 | Tap `‹⌃` | ⌘⇧␣ |

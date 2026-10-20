@@ -234,7 +234,6 @@ Caps Lock pulls double duty: tap-alone is the well-known vim Escape trick (deliv
 | Input | Output |
 |---|---|
 | ⇧ + ⎋ | ⇪ |
-| ⇪ + ⎋ | ⇪ |
 | Tap ‹⌃ | ⌘⇧␣ (next input source — language switch) |
 
 The Moonlander's QMK firmware handles Caps Lock differently, hence the alternate path.

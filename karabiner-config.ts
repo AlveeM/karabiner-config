@@ -695,7 +695,6 @@ function keyboard_moonlander() {
   let ifMoonlander = ifDevice({ vendor_id: 12951, product_id: 6505 })
   return rule('Moonlander', ifMoonlander).manipulators([
     map('⎋', '⇧').to('⇪'),
-    map('⎋', '⇪').to('⇪'),
 
     ...tapModifiers({
       '‹⌃': toKey('␣', '⌘⇧'), // selectNextSourceInInputMenu
