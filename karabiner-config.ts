@@ -25,6 +25,7 @@ import links from './links.json' with { type: 'json' }
 import {
   appCommons,
   duoModifiers,
+  eventLabel,
   mapValues,
   raycastExt,
   raycastWin,
@@ -32,6 +33,7 @@ import {
   toResizeWindow,
   toClearNotifications,
   toSystemSetting,
+  twoRowHint,
 } from './utils.ts'
 
 // Shared by the leader and hyper layers.
@@ -127,6 +129,20 @@ const toDigitExtras = {
   h: toKey('⌫', '⌥'),
   y: toKey('⌫', '⌘'),
 }
+
+const vimKeys = {
+  h: toKey('←'),
+  j: toKey('↓'),
+  k: toKey('↑'),
+  l: toKey('→'),
+
+  ';': toKey('›⇧'),
+  d: toKey('‹⌘'),
+  s: toKey('‹⌃'),
+  a: toKey('‹⌥'),
+}
+
+const toDelete = { "'": toKey('⌫'), '\\': toKey('⌦') }
 
 function main(target: string) {
   writeToProfile(
@@ -373,9 +389,14 @@ function rule_hyperLayer() {
 }
 
 function layer_vim() {
-  let hint = `\
-←  ↓  ↑  →     ⌫
-H  J    K   L       '`
+  let hint = twoRowHint(
+    [
+      ['h', 'j', 'k', 'l'],
+      ['a', 's', 'd', ';'],
+      ["'", '\\'],
+    ],
+    (k) => eventLabel({ ...vimKeys, ...toDelete }[k as 'h']),
+  )
   let layer = duoLayer('f', ';').threshold(250).notification(hint)
   return layer.manipulators([
     withModifier('??')({
@@ -395,9 +416,17 @@ H  J    K   L       '`
 }
 
 function layer_symbol() {
-  let hint = `\
-&   !  @ #    ^   {  [   (  $      ?  }  ]   )  %      _   +      ⌫
-N  M  ,   .    H  J  K  L  ;      Y  U  I  O  P       ␣  ⏎      '`
+  let hint = twoRowHint(
+    [
+      ['n', 'm', ',', '.'],
+      ['h', 'j', 'k', 'l', ';'],
+      ['y', 'u', 'i', 'o', 'p'],
+      [']'],
+      ['␣', '⏎'],
+      ["'"],
+    ],
+    (k) => (k === "'" ? '⌫' : symbolKeys[k as keyof typeof symbolKeys]),
+  )
 
   let layer = duoLayer('s', ';').threshold(250).notification(hint)
   return layer.manipulators([
@@ -408,9 +437,24 @@ N  M  ,   .    H  J  K  L  ;      Y  U  I  O  P       ␣  ⏎      '`
 }
 
 function layer_digitAndDelete() {
-  let hint = `\
-0    1  2  3    4  5  6    7  8  9    +  -  /  *    .    ⌫_⌥_⌘  ⌦
-N   M  ,   .     J  K  L    U  I  O    P  ;   /  ]    [      '   H   Y    \\`
+  let hint = twoRowHint(
+    [
+      ['n', 'm', ',', '.'],
+      ['j', 'k', 'l'],
+      ['u', 'i', 'o'],
+      ['p', ';', '/', ']'],
+      ['['],
+      ["'", 'h', 'y'],
+      ['\\'],
+    ],
+    (k) => {
+      let digit = digitKeys.indexOf(k as (typeof digitKeys)[number])
+      if (digit >= 0) return String(digit)
+      if (k === '/') return '/' // not remapped, passes through
+      if (k === '[') return '.'
+      return eventLabel(toDigitExtras[k as keyof typeof toDigitExtras])
+    },
+  )
   let layer = duoLayer('d', ';').threshold(250).notification(hint)
   return layer.manipulators([
     // digits keypad_{i}

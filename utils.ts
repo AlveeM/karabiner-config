@@ -16,6 +16,8 @@ import {
   toRemoveNotificationMessage,
 } from 'karabiner.ts'
 
+import { describeEvents } from './describe.ts'
+
 /** Back/Forward history in most apps. */
 export function historyNavi() {
   return [
@@ -224,4 +226,32 @@ export function mapValues<T, U>(
   fn: (v: T) => U,
 ): Record<string, U> {
   return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fn(v)]))
+}
+
+/**
+ * Two-row layer hint: labels on top, keys below, each column padded to its
+ * widest cell. Groups are separated by a wider gap (e.g. one per keyboard row).
+ */
+export function twoRowHint(
+  groups: string[][],
+  label: (key: string) => string,
+): string {
+  let top: string[] = []
+  let bottom: string[] = []
+  for (let group of groups) {
+    let columns = group.map((key) => {
+      let l = label(key)
+      let k = key.toUpperCase()
+      let width = Math.max(l.length, k.length)
+      return { l: l.padEnd(width), k: k.padEnd(width) }
+    })
+    top.push(columns.map((c) => c.l).join(' '))
+    bottom.push(columns.map((c) => c.k).join(' '))
+  }
+  return `${top.join('   ')}\n${bottom.join('   ')}`
+}
+
+/** Label for a to-event (or list) as shown in hints. */
+export function eventLabel(to: ToEvent | ToEvent[]): string {
+  return describeEvents(Array.isArray(to) ? to : [to])
 }
