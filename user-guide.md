@@ -14,7 +14,7 @@ The full binding reference lives in [`cheatsheet.md`](./cheatsheet.md). This gui
 - *Optional:* a [ZSA Moonlander](https://www.zsa.io/moonlander) keyboard — there is dedicated handling for `vendor_id: 12951, product_id: 6505`. Everything else falls under the "Non-Moonlander Keyboards" rule.
 - *Optional:* [Raycast](https://www.raycast.com/) with the Window Management extension and [Homerow](https://www.homerow.app/) — several rules invoke them.
 
-To apply the config: `npm install`, then `npm run build` (`tsx karabiner-config.ts`). It calls `writeToProfile('Default', …)` and writes directly into the Karabiner profile. `npm run snapshot` does a dry run (`KARABINER_DRY_RUN=1`) that doesn't touch the profile.
+To apply the config: `npm install`, then `npm run build` (`tsx karabiner-config.ts`). It calls `writeToProfile('Default', …)` and writes directly into the Karabiner profile. `npm run snapshot` does a dry run (`KARABINER_DRY_RUN=1`) that rewrites `snapshot.json` without touching the profile; `npm run snapshot:check` fails if the snapshot is out of date.
 
 ---
 
