@@ -215,6 +215,7 @@ Same mapping as the [Digit & delete duo-layer](#digit--delete-layer--hold-d---or
 | `g` | ricoberger/gitmoji |
 | `s` | raycast/snippets — Search Snippets |
 | `v` | raycast/clipboard-history |
+| `w` | raycast/navigation — Switch Windows |
 
 ### `␣` — Symbol2
 

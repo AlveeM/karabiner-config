@@ -304,6 +304,7 @@ function rule_hyperLayer() {
         g: raycastExt('ricoberger/gitmoji/gitmoji'),
         s: raycastExt('raycast/snippets/search-snippets'),
         v: raycastExt('raycast/clipboard-history/clipboard-history'),
+        w: raycastExt('raycast/navigation/switch-windows'),
       },
     },
     '␣': {
