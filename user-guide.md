@@ -147,7 +147,7 @@ There is also one regular (non-duo) layer:
 |---|---|---|
 | **System** | hold `` ` `` (backtick) | Mouse warp, sleep, app switch, clear notifications |
 
-The Vim, Symbol and Digit layers have a `notification(...)` hint string showing their layout (e.g. the vim layer shows `← ↓ ↑ →` above `H J K L`). The layouts are drawn in the cheatsheet.
+The Vim, Symbol and Digit layers have a `notification(...)` hint string showing their layout (e.g. the vim layer shows `← ↓ ↑ →` above `H J K L`). The hints are generated from the same mapping tables the layers use (`twoRowHint` in `utils.ts`), so they can't drift from the bindings.
 
 A small but important detail: inside the vim layer, holding `;`/`d`/`s`/`a` produces *side-specific* modifiers (`›⇧` `‹⌘` `‹⌃` `‹⌥`). This means the vim layer can hand off to the per-app tap-modifier rules (next pattern) without leaving home row.
 
@@ -200,7 +200,7 @@ rule('Chrome', ifApp('^com.google.Chrome$')).manipulators(
     tab: true,
     switcher: true,
     taps: { '‹⌥': toKey('r', '⌘'), … },
-    appendExtras: [appResize('Google Chrome')],
+    appendExtras: [map('⎋', '⌘').to('⎋', '⌘⇧')],
   }),
 )
 ```
@@ -278,7 +278,9 @@ If duo modifiers feel "sticky" (chords firing when you didn't mean them) lower t
 
 - `karabiner-config.ts` — all rules, layers, and app definitions. Top-level `main()` lists what's loaded.
 - `layer-engines.ts` — `createLeaderLayer` and `createHyperLayer`, the state machines behind the leader key and Hyper layer.
-- `utils.ts` — `duoModifiers`, `tapModifiers`, `appCommons`, `historyNavi`, `tabNavi`, `switcher`, `appResize`, `toResizeWindow`, `raycastExt`, `raycastWin`, `toClearNotifications`, `toSystemSetting`.
+- `utils.ts` — `duoModifiers`, `tapModifiers`, `appCommons`, `historyNavi`, `tabNavi`, `switcher`, `toResizeWindow`, `raycastExt`, `raycastWin`, `toClearNotifications`, `toSystemSetting`, `twoRowHint`, `eventLabel`, `mapValues`.
+- `describe.ts` — human-readable key and event names, shared by the layer hints and the cheatsheet generator.
+- `generate-cheatsheet.ts` — `npm run cheatsheet` regenerates `cheatsheet.md` from the config's dry-run output.
 - `links.json` — leader-key Link namespace data.
 
 Adding a new binding means editing one of these and re-running the script — Karabiner picks up the new profile JSON immediately.
