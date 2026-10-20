@@ -4,21 +4,14 @@
  *
  *   npm run cheatsheet
  */
-import { execFileSync } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
 
+import { dryRunComplexModifications } from './dry-run.ts'
 import { describeEvents, keyName, modifierString } from './describe.ts'
 
 type Json = any
 
-const profile = JSON.parse(
-  execFileSync('npx', ['tsx', 'karabiner-config.ts'], {
-    env: { ...process.env, KARABINER_DRY_RUN: '1' },
-    encoding: 'utf8',
-    maxBuffer: 64 * 1024 * 1024,
-  }),
-)
-const rules: Json[] = profile.profiles[0].complex_modifications.rules
+const rules: Json[] = dryRunComplexModifications().rules
 const rule = (description: string): Json => {
   let found = rules.find((r) => r.description === description)
   if (!found) throw new Error(`Rule not found: ${description}`)

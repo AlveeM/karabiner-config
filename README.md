@@ -45,10 +45,11 @@ Per-app rules cover Chrome, Safari, JetBrains IDEs, Zed, VSCode, Slack and Zoom.
 ```sh
 npm install
 npm run build      # writes the "Default" Karabiner profile
-npm run snapshot   # dry run, leaves the profile untouched
 npm run update     # update karabiner.ts
 npm run cheatsheet # regenerate cheatsheet.md from the config
 npm run typecheck
+npm run snapshot   # dry run: rewrite snapshot.json, leaves the profile untouched
+npm run snapshot:check  # fail if snapshot.json is out of date
 ```
 
 `build` overwrites rules in the `Default` profile, so back up your Karabiner config first if you have manual rules.
@@ -60,5 +61,6 @@ npm run typecheck
 | `karabiner-config.ts` | All rules, layers and app definitions. `main()` lists what's loaded |
 | `layer-engines.ts` | Leader key and Hyper layer state machines |
 | `utils.ts` | Shared helpers: duo and tap modifiers, `appCommons`, Raycast and resize helpers |
+| `snapshot.ts` / `snapshot.json` | Snapshot of the emitted rules, one manipulator per line; run `npm run snapshot` after changing a binding |
 | `generate-cheatsheet.ts` | Generates `cheatsheet.md` from the config's dry-run output |
 | `links.json` | Data for the leader-key Link namespace |
