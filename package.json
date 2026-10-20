@@ -2,6 +2,7 @@
   "name": "karabiner-config",
   "scripts": {
     "build": "tsx karabiner-config.ts",
+    "cheatsheet": "tsx generate-cheatsheet.ts",
     "typecheck": "tsc --noEmit",
     "snapshot": "KARABINER_DRY_RUN=1 tsx karabiner-config.ts",
     "update": "npm update karabiner.ts"
