@@ -418,9 +418,9 @@ Hold both trigger keys (≤ 250 ms apart), then tap a binding key.
 | `⌥ + l` | ⌘⇧] |
 | `⌘⌥⌃ + h` | ⌃⇧⇥ |
 | `⌘⌥⌃ + l` | ⌃⇥ |
-| Tap `‹⌥` | ⌘r |
-| Tap `›⌘` | ⌘⌥i |
-| Tap `›⌥` | ⌘⇧a |
+| Tap `‹⌥` | Refresh the page (⌘r) |
+| Tap `›⌘` | Developer tools (⌘⌥i) |
+| Tap `›⌥` | Search tabs (⌘⇧a) |
 
 ### Safari (`^com.apple.Safari$`)
 
@@ -432,9 +432,9 @@ Hold both trigger keys (≤ 250 ms apart), then tap a binding key.
 | `⌥ + l` | ⌘⇧] |
 | `⌘⌥⌃ + h` | ⌃⇧⇥ |
 | `⌘⌥⌃ + l` | ⌃⇥ |
-| Tap `‹⌘` | ⌘⇧l |
-| Tap `‹⌥` | ⌘r |
-| Tap `›⌘` | ⌘⌥i |
+| Tap `‹⌘` | Show/hide sidebar (⌘⇧l) |
+| Tap `‹⌥` | Reload page (⌘r) |
+| Tap `›⌘` | Show web inspector (⌘⌥i) |
 
 ### JetBrains IDE (`^com.jetbrains.[\w-]+$`)
 
@@ -446,12 +446,12 @@ Hold both trigger keys (≤ 250 ms apart), then tap a binding key.
 | `⌥ + l` | ⌘⇧] |
 | `⌘⌥⌃ + h` | ⌃⇧⇥ |
 | `⌘⌥⌃ + l` | ⌃⇥ |
-| Tap `‹⌘` | ⌘⇧⎋ |
-| Tap `‹⌥` | ⌥⇧r |
-| Tap `‹⌃` | ⌥⌃r |
-| Tap `›⌘` | ⌥4 |
-| Tap `›⌥` | ⌘⇧a |
-| Tap `›⌃` | ⌘e |
+| Tap `‹⌘` | Hide all tool windows (⌘⇧⎋) |
+| Tap `‹⌥` | Run (⌥⇧r) |
+| Tap `‹⌃` | Run... (⌥⌃r) |
+| Tap `›⌘` | Terminal tool window (⌥4) |
+| Tap `›⌥` | Find action (⌘⇧a) |
+| Tap `›⌃` | Recent files (⌘e) |
 | `⌘ + ⎋` | ⌘⇧⎋ |
 
 ### Zed (`^dev.zed.Zed$`)
@@ -464,12 +464,12 @@ Hold both trigger keys (≤ 250 ms apart), then tap a binding key.
 | `⌥ + l` | ⌘⇧] |
 | `⌘⌥⌃ + h` | ⌃⇧⇥ |
 | `⌘⌥⌃ + l` | ⌃⇥ |
-| Tap `‹⌘` | ⌘⇧⎋ |
-| Tap `‹⌥` | ⌥t |
-| Tap `‹⌃` | ⌥⇧t |
-| Tap `›⌘` | ⌃` |
-| Tap `›⌥` | ⌘⇧a |
-| Tap `›⌃` | ⌘p |
+| Tap `‹⌘` | Close all docks (⌘⇧⎋) |
+| Tap `‹⌥` | Rerun task (⌥t) |
+| Tap `‹⌃` | Spawn task (⌥⇧t) |
+| Tap `›⌘` | Terminal (⌃`) |
+| Tap `›⌥` | Command palette (⌘⇧a) |
+| Tap `›⌃` | File finder (⌘p) |
 | `⌘ + ⎋` | ⌘⇧⎋ |
 
 ### VSCode (`^com.microsoft.VSCode$`)
@@ -482,11 +482,11 @@ Hold both trigger keys (≤ 250 ms apart), then tap a binding key.
 | `⌘⌥⌃ + l` | ⌃⇥ |
 | `⌃ + h` | ⌃- |
 | `⌃ + l` | ⌃⇧- |
-| Tap `‹⌘` | ⌘⎋ |
-| Tap `‹⌥` | ⌥⇧r |
-| Tap `›⌘` | ⌃` |
-| Tap `›⌥` | ⌘⇧p |
-| Tap `›⌃` | ⌘p |
+| Tap `‹⌘` | Toggle sidebar (⌘⎋) |
+| Tap `‹⌥` | Run (⌥⇧r) |
+| Tap `›⌘` | Terminal (⌃`) |
+| Tap `›⌥` | Command palette (⌘⇧p) |
+| Tap `›⌃` | Quick open file (⌘p) |
 
 ### Slack (`^com.tinyspeck.slackmacgap$`)
 
@@ -494,20 +494,20 @@ Hold both trigger keys (≤ 250 ms apart), then tap a binding key.
 | :--- | :--- |
 | `⌃ + h` | ⌘[ |
 | `⌃ + l` | ⌘] |
-| Tap `‹⌘` | ⌘⇧d |
-| Tap `‹⌥` | f6 |
-| Tap `›⌘` | ⌘. |
-| Tap `›⌥` | ⌘k |
+| Tap `‹⌘` | Show/hide sidebar (⌘⇧d) |
+| Tap `‹⌥` | Focus next section (f6) |
+| Tap `›⌘` | Hide right bar (⌘.) |
+| Tap `›⌥` | Open quick switcher (⌘k) |
 | `Meh + 1` | Resize window |
 
 ### Zoom (`^us.zoom.xos$`)
 
 | Input | Action |
 | :--- | :--- |
-| Tap `‹⌘` | ⌘⇧a |
-| Tap `‹⌥` | ⌘⇧s |
-| Tap `›⌘` | ⌘⇧v |
-| Tap `›⌥` | ⌘⇧h |
+| Tap `‹⌘` | Mute/unmute audio (⌘⇧a) |
+| Tap `‹⌥` | Start/stop screen sharing (⌘⇧s) |
+| Tap `›⌘` | Start/stop video (⌘⇧v) |
+| Tap `›⌥` | Show/hide chat panel (⌘⇧h) |
 
 ---
 
@@ -561,4 +561,4 @@ Hold both trigger keys (≤ 250 ms apart), then tap a binding key.
 | Input | Action |
 | :--- | :--- |
 | `⇧ + ⎋` | ⇪ |
-| Tap `‹⌃` | ⌘⇧␣ |
+| Tap `‹⌃` | Next input source (⌘⇧␣) |

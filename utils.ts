@@ -43,7 +43,8 @@ export function switcher() {
 }
 
 /**
- * Map when tap a modifier key; keep as modifier when hold.
+ * Map when tap a modifier key; keep as modifier when hold. A value can be
+ * `[event, description]`; the description is shown in the cheatsheet.
  *
  * - ‹⌘ Show/Hide UI (e.g. left sidebars, or all UI)
  * - ‹⌥ Run current task (re-run)
@@ -54,11 +55,13 @@ export function switcher() {
  * - ›⌃ History (e.g. recent files)
  */
 export function tapModifiers(
-  v: Partial<Record<SideModifierAlias | 'fn', ToEvent>>,
+  v: Partial<Record<SideModifierAlias | 'fn', ToEvent | [ToEvent, string]>>,
 ) {
-  return Object.entries(v).map(([k, to]) => {
+  return Object.entries(v).map(([k, entry]) => {
     let key = k as SideModifierAlias | 'fn'
-    return map(key).to(key).toIfAlone(to)
+    let [to, description] = Array.isArray(entry) ? entry : [entry]
+    let manipulator = map(key).to(key).toIfAlone(to)
+    return description ? manipulator.description(description) : manipulator
   })
 }
 

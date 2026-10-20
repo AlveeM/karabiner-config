@@ -524,10 +524,10 @@ function app_chrome() {
       tab: true,
       switcher: true,
       taps: {
-        '‹⌥': toKey('r', '⌘'), // refreshThePage
+        '‹⌥': [toKey('r', '⌘'), 'Refresh the page'],
 
-        '›⌘': toKey('i', '⌘⌥'), // developerTools
-        '›⌥': toKey('a', '⌘⇧'), // searchTabs
+        '›⌘': [toKey('i', '⌘⌥'), 'Developer tools'],
+        '›⌥': [toKey('a', '⌘⇧'), 'Search tabs'],
       },
     }),
   )
@@ -540,10 +540,10 @@ function app_safari() {
       tab: true,
       switcher: true,
       taps: {
-        '‹⌘': toKey('l', '⌘⇧'), // showHideSideBar
-        '‹⌥': toKey('r', '⌘'), // reloadPage
+        '‹⌘': [toKey('l', '⌘⇧'), 'Show/hide sidebar'],
+        '‹⌥': [toKey('r', '⌘'), 'Reload page'],
 
-        '›⌘': toKey('i', '⌘⌥'), // showWebInspector
+        '›⌘': [toKey('i', '⌘⌥'), 'Show web inspector'],
       },
     }),
   )
@@ -559,13 +559,13 @@ function app_jetBrainsIDE() {
       tab: true,
       switcher: true,
       taps: {
-        '‹⌘': toKey('⎋', '⌘⇧'), // hideAllToolWindows
-        '‹⌥': toKey('r', '⌥⇧'), // Run
-        '‹⌃': toKey('r', '⌥⌃'), // Run...
+        '‹⌘': [toKey('⎋', '⌘⇧'), 'Hide all tool windows'],
+        '‹⌥': [toKey('r', '⌥⇧'), 'Run'],
+        '‹⌃': [toKey('r', '⌥⌃'), 'Run...'],
 
-        '›⌘': toKey(4, '⌥'), // toolWindows_terminal
-        '›⌥': toKey('a', '⌘⇧'), // findAction
-        '›⌃': toKey('e', '⌘'), // recentFiles
+        '›⌘': [toKey(4, '⌥'), 'Terminal tool window'],
+        '›⌥': [toKey('a', '⌘⇧'), 'Find action'],
+        '›⌃': [toKey('e', '⌘'), 'Recent files'],
       },
       appendExtras: [map('⎋', '⌘').to('⎋', '⌘⇧')],
     }),
@@ -579,13 +579,13 @@ function app_zed() {
       tab: true,
       switcher: true,
       taps: {
-        '‹⌘': toKey('⎋', '⌘⇧'), // closeAllDocks
-        '‹⌥': toKey('t', '⌥'), // task::Rerun
-        '‹⌃': toKey('t', '⌥⇧'), // task::Spawn
+        '‹⌘': [toKey('⎋', '⌘⇧'), 'Close all docks'],
+        '‹⌥': [toKey('t', '⌥'), 'Rerun task'],
+        '‹⌃': [toKey('t', '⌥⇧'), 'Spawn task'],
 
-        '›⌘': toKey('`', '⌃'), // terminal
-        '›⌥': toKey('a', '⌘⇧'), // command
-        '›⌃': toKey('p', '⌘'), // fileFinder
+        '›⌘': [toKey('`', '⌃'), 'Terminal'],
+        '›⌥': [toKey('a', '⌘⇧'), 'Command palette'],
+        '›⌃': [toKey('p', '⌘'), 'File finder'],
       },
       appendExtras: [map('⎋', '⌘').to('⎋', '⌘⇧')],
     }),
@@ -599,12 +599,12 @@ function app_vsCode() {
       switcher: true,
       prependExtras: [map('h', '⌃').to('-', '⌃'), map('l', '⌃').to('-', '⌃⇧')],
       taps: {
-        '‹⌘': toKey('⎋', '⌘'), // Toggle Sidebar visibility
-        '‹⌥': toKey('r', '⌥⇧'), // Run
+        '‹⌘': [toKey('⎋', '⌘'), 'Toggle sidebar'],
+        '‹⌥': [toKey('r', '⌥⇧'), 'Run'],
 
-        '›⌘': toKey('`', '⌃'), // terminal
-        '›⌥': toKey('p', '⌘⇧'), // Show Command Palette
-        '›⌃': toKey('p', '⌘'), // Quick Open, Go to File...
+        '›⌘': [toKey('`', '⌃'), 'Terminal'],
+        '›⌥': [toKey('p', '⌘⇧'), 'Command palette'],
+        '›⌃': [toKey('p', '⌘'), 'Quick open file'],
       },
     }),
   )
@@ -615,11 +615,11 @@ function app_slack() {
     appCommons({
       history: true,
       taps: {
-        '‹⌘': toKey('d', '⌘⇧'), // showHideSideBar
-        '‹⌥': toKey('f6'), // moveFocusToTheNextSection
+        '‹⌘': [toKey('d', '⌘⇧'), 'Show/hide sidebar'],
+        '‹⌥': [toKey('f6'), 'Focus next section'],
 
-        '›⌘': toKey('.', '⌘'), // hideRightBar
-        '›⌥': toKey('k', '⌘'), // open
+        '›⌘': [toKey('.', '⌘'), 'Hide right bar'],
+        '›⌥': [toKey('k', '⌘'), 'Open quick switcher'],
       },
       // After the 1/4 width, leave some space for opening thread in a new
       // window before the last 1/4 width
@@ -634,11 +634,11 @@ function app_zoom() {
   return rule('Zoom', ifApp('^us\\.zoom\\.xos$')).manipulators(
     appCommons({
       taps: {
-        '‹⌘': toKey('a', '⌘⇧'), // muteUnmuteMyAudio
-        '‹⌥': toKey('s', '⌘⇧'), // startStopScreenSharing
+        '‹⌘': [toKey('a', '⌘⇧'), 'Mute/unmute audio'],
+        '‹⌥': [toKey('s', '⌘⇧'), 'Start/stop screen sharing'],
 
-        '›⌘': toKey('v', '⌘⇧'), // startStopVideo
-        '›⌥': toKey('h', '⌘⇧'), // showHideChatPanel
+        '›⌘': [toKey('v', '⌘⇧'), 'Start/stop video'],
+        '›⌥': [toKey('h', '⌘⇧'), 'Show/hide chat panel'],
       },
     }),
   )
@@ -697,7 +697,7 @@ function keyboard_moonlander() {
     map('⎋', '⇧').to('⇪'),
 
     ...tapModifiers({
-      '‹⌃': toKey('␣', '⌘⇧'), // selectNextSourceInInputMenu
+      '‹⌃': [toKey('␣', '⌘⇧'), 'Next input source'],
     }),
   ])
 }

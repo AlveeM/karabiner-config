@@ -191,7 +191,7 @@ tabNavi()      // ⌥H ⌥L → ⌘⇧[ ⌘⇧] (prev/next tab)
 switcher()     // ⌘⌥⌃H ⌘⌥⌃L → ⌃⇧⇥ ⌃⇥ (prev/next window or workspace)
 ```
 
-Options are `history`, `tab`, `switcher` (booleans), `prependExtras`, `taps` (tap-modifiers) and `appendExtras`, always emitted in that order. A typical app rule:
+Options are `history`, `tab`, `switcher` (booleans), `prependExtras`, `taps` (tap-modifiers) and `appendExtras`, always emitted in that order. A tap value is either an event or `[event, description]`; the description appears in the generated cheatsheet. A typical app rule:
 
 ```ts
 rule('Chrome', ifApp('^com.google.Chrome$')).manipulators(
@@ -199,7 +199,7 @@ rule('Chrome', ifApp('^com.google.Chrome$')).manipulators(
     history: true,
     tab: true,
     switcher: true,
-    taps: { '‹⌥': toKey('r', '⌘'), … },
+    taps: { '‹⌥': [toKey('r', '⌘'), 'Refresh the page'], … },
     appendExtras: [map('⎋', '⌘').to('⎋', '⌘⇧')],
   }),
 )

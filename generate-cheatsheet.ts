@@ -205,7 +205,12 @@ function plainRows(manipulators: Json[]): string[][] {
   return manipulators.map((m) => {
     let alone = m.to_if_alone?.length ? describeEvents(m.to_if_alone) : ''
     let from = describeFrom(m.from)
-    if (alone) return [`Tap ${code(from)}`, alone]
+    if (alone) {
+      return [
+        `Tap ${code(from)}`,
+        m.description ? `${m.description} (${alone})` : alone,
+      ]
+    }
     return [code(from), describeEvents(m.to)]
   })
 }
