@@ -52,6 +52,8 @@ npm run snapshot   # dry run: rewrite snapshot.json, leaves the profile untouche
 npm run snapshot:check  # fail if snapshot.json is out of date
 ```
 
+To skip per-app rules on `build`, list their names in `disabled-apps.json` (e.g. `["slack", "zoom"]`; valid names: `chrome`, `safari`, `jetbrains`, `zed`, `vscode`, `slack`, `zoom`). `snapshot` and `cheatsheet` always include every app.
+
 `build` overwrites rules in the `Default` profile, so back up your Karabiner config first if you have manual rules.
 
 ## Layout
@@ -63,4 +65,5 @@ npm run snapshot:check  # fail if snapshot.json is out of date
 | `utils.ts` | Shared helpers: duo and tap modifiers, `appCommons`, Raycast and resize helpers |
 | `snapshot.ts` / `snapshot.json` | Snapshot of the emitted rules, one manipulator per line; run `npm run snapshot` after changing a binding |
 | `generate-cheatsheet.ts` | Generates `cheatsheet.md` from the config's dry-run output |
+| `disabled-apps.json` | Names of per-app rules to skip when running `npm run build` |
 | `links.json` | Data for the leader-key Link namespace |

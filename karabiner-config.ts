@@ -20,6 +20,7 @@ import {
 } from 'karabiner.ts'
 
 import { createHyperLayer, createLeaderLayer } from './layer-engines.ts'
+import disabledAppsJson from './disabled-apps.json' with { type: 'json' }
 import links from './links.json' with { type: 'json' }
 
 import {
@@ -144,6 +145,38 @@ const vimKeys = {
 
 const toDelete = { "'": toKey('⌫'), '\\': toKey('⌦') }
 
+// Per-app rules, keyed by the names accepted in disabled-apps.json.
+const appRules = {
+  chrome: app_chrome,
+  safari: app_safari,
+  jetbrains: app_jetBrainsIDE,
+  zed: app_zed,
+  vscode: app_vsCode,
+  slack: app_slack,
+  zoom: app_zoom,
+}
+
+/**
+ * App rules minus those listed in disabled-apps.json. Dry runs (snapshot,
+ * cheatsheet) set KARABINER_ALL_APPS to include every app.
+ */
+function enabledAppRules() {
+  let disabledApps: string[] = disabledAppsJson
+  let names = Object.keys(appRules)
+  let unknown = disabledApps.filter((n) => !names.includes(n))
+  if (unknown.length) {
+    throw new Error(
+      `Unknown app(s) in disabled-apps.json: ${unknown.join(', ')}. Valid: ${names.join(', ')}`,
+    )
+  }
+  let disabled = process.env.KARABINER_ALL_APPS ? [] : disabledApps
+  if (disabled.length)
+    console.error(`Skipping app rules: ${disabled.join(', ')}`)
+  return Object.entries(appRules)
+    .filter(([name]) => !disabled.includes(name))
+    .map(([, build]) => build())
+}
+
 function main(target: string) {
   writeToProfile(
     target,
@@ -158,13 +191,7 @@ function main(target: string) {
       layer_snippet(),
       layer_system(),
 
-      app_chrome(),
-      app_safari(),
-      app_jetBrainsIDE(),
-      app_zed(),
-      app_vsCode(),
-      app_slack(),
-      app_zoom(),
+      ...enabledAppRules(),
 
       windowManagement(),
       app_homerow(),

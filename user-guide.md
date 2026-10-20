@@ -282,5 +282,6 @@ If duo modifiers feel "sticky" (chords firing when you didn't mean them) lower t
 - `describe.ts` — human-readable key and event names, shared by the layer hints and the cheatsheet generator.
 - `generate-cheatsheet.ts` — `npm run cheatsheet` regenerates `cheatsheet.md` from the config's dry-run output.
 - `links.json` — leader-key Link namespace data.
+- `disabled-apps.json` — per-app rules to skip on `npm run build` (`chrome`, `safari`, `jetbrains`, `zed`, `vscode`, `slack`, `zoom`). Dry runs (`snapshot`, `cheatsheet`) ignore it and include every app.
 
 Adding a new binding means editing one of these and re-running the script — Karabiner picks up the new profile JSON immediately.
