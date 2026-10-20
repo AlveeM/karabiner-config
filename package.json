@@ -2,13 +2,14 @@
   "name": "karabiner-config",
   "scripts": {
     "build": "tsx karabiner-config.ts",
+    "typecheck": "tsc --noEmit",
     "snapshot": "KARABINER_DRY_RUN=1 tsx karabiner-config.ts",
     "update": "npm update karabiner.ts"
   },
   "devDependencies": {
     "@types/node": "^22.13.4",
-    "karabiner.ts": "latest",
-    "prettier": "^2",
+    "karabiner.ts": "^1.36.0",
+    "prettier": "^3.9.10",
     "tsx": "^4",
     "typescript": "^5"
   }

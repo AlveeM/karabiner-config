@@ -121,35 +121,38 @@ export function raycastWin(name: string) {
   return to$(`open -g raycast://extensions/raycast/window-management/${name}`)
 }
 
-export function toResizeWindow(
-  app: string,
-  position = { x: 0, y: 220 }, // First window, below widgets
-  size = { w: 1262, h: 1220 }, // First 1/4 width, screen height - widgets height
-) {
-  return to$(`osascript -e '\
-set windowPosition to {${position.x}, ${position.y}}
-set windowSize to {${size.w}, ${size.h}}
-
-tell application "System Events"
-  tell process "${app}"
-    set frontWindow to first window
-    set position of frontWindow to windowPosition
-    set size of frontWindow to windowSize
-  end tell
-end tell'`)
+type ResizeOptions = {
+  /** Left edge, as a fraction of the screen width. */
+  x?: number
+  /** Window width, as a fraction of the screen width. */
+  w?: number
+  /** Top edge in px, e.g. to leave room for the menu bar or widgets. */
+  top?: number
 }
 
 /**
- * Convenience: builds the standard `1 + Meh -> resize current window` manipulator.
- * Used by appCommons callers to drop a resize into prependExtras/appendExtras
- * without restating the trigger or toResizeWindow plumbing.
+ * Resize the frontmost app's first window to a full-height column on the main
+ * screen. The window runs from `top` to the bottom of the screen; defaults to
+ * the first 1/4 width, below widgets.
  */
-export function appResize(
-  app: string,
-  position?: { x: number; y: number },
-  size?: { w: number; h: number },
-): ManipulatorBuilder {
-  return map(1, 'Meh').to(toResizeWindow(app, position, size))
+export function toResizeWindow({
+  x = 0,
+  w = 1 / 4,
+  top = 220,
+}: ResizeOptions = {}) {
+  return to$(`osascript -e '\
+tell application "Finder" to set screenBounds to bounds of window of desktop
+set screenWidth to item 3 of screenBounds
+set screenHeight to item 4 of screenBounds
+
+tell application "System Events"
+  set frontProcess to first process whose frontmost is true
+  tell frontProcess
+    set frontWindow to first window
+    set position of frontWindow to {(screenWidth * ${x}) as integer, ${top}}
+    set size of frontWindow to {(screenWidth * ${w}) as integer, screenHeight - ${top}}
+  end tell
+end tell'`)
 }
 
 type AppCommonsOptions = {
@@ -216,3 +219,9 @@ export function toSystemSetting(pane: string) {
   return to$(`open -b com.apple.systempreferences ${path}`)
 }
 
+export function mapValues<T, U>(
+  obj: Record<string, T>,
+  fn: (v: T) => U,
+): Record<string, U> {
+  return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fn(v)]))
+}

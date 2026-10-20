@@ -20,17 +20,113 @@ import {
 } from 'karabiner.ts'
 
 import { createHyperLayer, createLeaderLayer } from './layer-engines.ts'
+import links from './links.json' with { type: 'json' }
 
 import {
   appCommons,
-  appResize,
   duoModifiers,
+  mapValues,
   raycastExt,
   raycastWin,
   tapModifiers,
+  toResizeWindow,
   toClearNotifications,
   toSystemSetting,
 } from './utils.ts'
+
+// Shared by the leader and hyper layers.
+const apps = {
+  c: 'Google Chrome',
+  e: 'Zed', // Editor
+  f: 'Finder',
+  g: 'Gram',
+  m: 'Spotify', // Music
+  s: 'Slack',
+  t: 'Ghostty', // Terminal
+  v: 'zoom.us',
+  w: 'Zen Browser',
+  ';': 'System Settings',
+}
+
+// key -> [extension, label]
+const raycastExtensions: { [key: string]: [string, string] } = {
+  c: ['raycast/calendar/my-schedule', 'Calendar'],
+  d: ['raycast/dictionary/define-word', 'Dictionary'],
+  e: ['raycast/emoji-symbols/search-emoji-symbols', 'Emoji'],
+  g: ['ricoberger/gitmoji/gitmoji', 'Gitmoji'],
+  s: ['raycast/snippets/search-snippets', 'Snippets'],
+  v: ['raycast/clipboard-history/clipboard-history', 'Clipboard'],
+}
+
+// Shared by the hyper `s`/`d` sublayers and the symbol/digit duo layers.
+const toSymbol = {
+  '!': toKey(1, '⇧'),
+  '@': toKey(2, '⇧'),
+  '#': toKey(3, '⇧'),
+  $: toKey(4, '⇧'),
+  '%': toKey(5, '⇧'),
+  '^': toKey(6, '⇧'),
+  '&': toKey(7, '⇧'),
+  '*': toKey(8, '⇧'),
+  '(': toKey(9, '⇧'),
+  ')': toKey(0, '⇧'),
+
+  '[': toKey('['),
+  ']': toKey(']'),
+  '{': toKey('[', '⇧'),
+  '}': toKey(']', '⇧'),
+
+  _: toKey('-', '⇧'),
+  '+': toKey('=', '⇧'),
+
+  '?': toKey('/', '⇧'),
+}
+
+// ! @ # $ % ^ & * ( )    _ +
+// 1 2 3 4 5 6 7 8 9 0    - =
+const symbolKeys = {
+  y: '?',
+  u: '}',
+  i: ']',
+  o: ')', // 0
+  p: '%', // 5
+
+  h: '^', // 6
+  j: '{',
+  k: '[',
+  l: '(', // 9
+  ';': '$', // 4
+
+  n: '&', // 7
+  m: '!', // 1
+  ',': '@', // 2
+  '.': '#', // 3
+
+  ']': '*', // 8
+
+  '␣': '_',
+  '⏎': '+',
+} as const
+
+const digitKeys = [
+  'n', //             // 0
+  ...['m', ',', '.'], // 1 2 3
+  ...['j', 'k', 'l'], // 4 5 6
+  ...['u', 'i', 'o'], // 7 8 9
+] as const
+
+// + - * . and delete keys
+const toDigitExtras = {
+  p: toKey('=', '⇧'), // +
+  ';': toKey('-'), // -
+  ']': toKey(8, '⇧'), // *
+  '[': toKey('keypad_period'),
+
+  '\\': toKey('⌦'),
+  "'": toKey('⌫'),
+  h: toKey('⌫', '⌥'),
+  y: toKey('⌫', '⌘'),
+}
 
 function main(target: string) {
   writeToProfile(
@@ -54,7 +150,7 @@ function main(target: string) {
       app_slack(),
       app_zoom(),
 
-      app_raycast(),
+      windowManagement(),
       app_homerow(),
 
       keyboard_nonMoonlander(),
@@ -94,18 +190,7 @@ function rule_leaderKey() {
   return createLeaderLayer({
     a: {
       name: 'App',
-      mapping: {
-        c: 'Google Chrome',
-        e: 'Zed', // Editor
-        f: 'Finder',
-        g: 'Gram',
-        m: 'Spotify', // Music
-        s: 'Slack',
-        t: 'Ghostty', // Terminal
-        v: 'zoom.us',
-        w: 'Zen Browser',
-        ';': 'System Settings',
-      },
+      mapping: apps,
       action: toApp,
     },
     e: {
@@ -137,19 +222,12 @@ function rule_leaderKey() {
     },
     l: {
       name: 'Link',
-      mapping: require('./links.json') as { [key: string]: string[] },
-      action: (x) => to$(`open ${x}`),
+      mapping: links,
+      action: (x) => to$(`open '${x}'`),
     },
     r: {
       name: 'Raycast',
-      mapping: {
-        c: ['raycast/calendar/my-schedule', 'Calendar'],
-        d: ['raycast/dictionary/define-word', 'Dictionary'],
-        e: ['raycast/emoji-symbols/search-emoji-symbols', 'Emoji'],
-        g: ['ricoberger/gitmoji/gitmoji', 'Gitmoji'],
-        s: ['raycast/snippets/search-snippets', 'Snippets'],
-        v: ['raycast/clipboard-history/clipboard-history', 'Clipboard'],
-      },
+      mapping: raycastExtensions,
       action: raycastExt,
     },
     s: {
@@ -169,18 +247,7 @@ function rule_hyperLayer() {
   return createHyperLayer({
     o: {
       name: 'Open',
-      mapping: {
-        c: toApp('Google Chrome'),
-        e: toApp('Zed'),
-        f: toApp('Finder'),
-        g: toApp('Gram'),
-        m: toApp('Spotify'),
-        s: toApp('Slack'),
-        t: toApp('Ghostty'),
-        v: toApp('zoom.us'),
-        w: toApp('Zen Browser'),
-        ';': toApp('System Settings'),
-      },
+      mapping: mapValues(apps, (app) => toApp(app)),
     },
     w: {
       name: 'Window',
@@ -222,54 +289,17 @@ function rule_hyperLayer() {
     s: {
       name: 'Symbol',
       mapping: {
-        y: toKey('/', '⇧'),
-        u: toKey(']', '⇧'),
-        i: toKey(']'),
-        o: toKey(0, '⇧'),
-        p: toKey(5, '⇧'),
-
-        h: toKey(6, '⇧'),
-        j: toKey('[', '⇧'),
-        k: toKey('['),
-        l: toKey(9, '⇧'),
-        ';': toKey(4, '⇧'),
-
-        n: toKey(7, '⇧'),
-        m: toKey(1, '⇧'),
-        ',': toKey(2, '⇧'),
-        '.': toKey(3, '⇧'),
-
-        ']': toKey(8, '⇧'),
-
-        '␣': toKey('-', '⇧'),
-        '⏎': toKey('=', '⇧'),
-
+        ...mapValues(symbolKeys, (v) => toSymbol[v]),
         "'": toKey('⌫'),
       },
     },
     d: {
       name: 'Digit',
       mapping: {
-        n: toKey('keypad_0'),
-        m: toKey('keypad_1'),
-        ',': toKey('keypad_2'),
-        '.': toKey('keypad_3'),
-        j: toKey('keypad_4'),
-        k: toKey('keypad_5'),
-        l: toKey('keypad_6'),
-        u: toKey('keypad_7'),
-        i: toKey('keypad_8'),
-        o: toKey('keypad_9'),
-
-        p: toKey('=', '⇧'),
-        ';': toKey('-'),
-        ']': toKey(8, '⇧'),
-        '[': toKey('keypad_period'),
-
-        '\\': toKey('⌦'),
-        "'": toKey('⌫'),
-        h: toKey('⌫', '⌥'),
-        y: toKey('⌫', '⌘'),
+        ...Object.fromEntries(
+          digitKeys.map((k, i) => [k, toKey(`keypad_${i as 0}`)]),
+        ),
+        ...toDigitExtras,
       },
     },
     v: {
@@ -297,12 +327,7 @@ function rule_hyperLayer() {
     r: {
       name: 'Raycast',
       mapping: {
-        c: raycastExt('raycast/calendar/my-schedule'),
-        d: raycastExt('raycast/dictionary/define-word'),
-        e: raycastExt('raycast/emoji-symbols/search-emoji-symbols'),
-        g: raycastExt('ricoberger/gitmoji/gitmoji'),
-        s: raycastExt('raycast/snippets/search-snippets'),
-        v: raycastExt('raycast/clipboard-history/clipboard-history'),
+        ...mapValues(raycastExtensions, ([ext]) => raycastExt(ext)),
         w: raycastExt('raycast/navigation/switch-windows'),
       },
     },
@@ -374,67 +399,9 @@ function layer_symbol() {
 &   !  @ #    ^   {  [   (  $      ?  }  ]   )  %      _   +      ⌫
 N  M  ,   .    H  J  K  L  ;      Y  U  I  O  P       ␣  ⏎      '`
 
-  let toSymbol = {
-    '!': toKey(1, '⇧'),
-    '@': toKey(2, '⇧'),
-    '#': toKey(3, '⇧'),
-    $: toKey(4, '⇧'),
-    '%': toKey(5, '⇧'),
-    '^': toKey(6, '⇧'),
-    '&': toKey(7, '⇧'),
-    '*': toKey(8, '⇧'),
-    '(': toKey(9, '⇧'),
-    ')': toKey(0, '⇧'),
-
-    '[': toKey('['),
-    ']': toKey(']'),
-    '{': toKey('[', '⇧'),
-    '}': toKey(']', '⇧'),
-
-    '-': toKey('-'),
-    '=': toKey('='),
-    _: toKey('-', '⇧'),
-    '+': toKey('=', '⇧'),
-
-    ';': toKey(';'),
-    '/': toKey('/'),
-    ':': toKey(';', '⇧'),
-    '?': toKey('/', '⇧'),
-
-    ',': toKey(','),
-    '.': toKey('.'),
-    '<': toKey(',', '⇧'),
-    '>': toKey('.', '⇧'),
-  }
-
   let layer = duoLayer('s', ';').threshold(250).notification(hint)
   return layer.manipulators([
-    withMapper({
-      // ! @ # $ % ^ & * ( )    _ +
-      // 1 2 3 4 5 6 7 8 9 0    - =
-
-      y: '?',
-      u: '}',
-      i: ']',
-      o: ')', // 0
-      p: '%', // 5
-
-      h: '^', // 6
-      j: '{',
-      k: '[',
-      l: '(', // 9
-      ';': '$', // 4
-
-      n: '&', // 7
-      m: '!', // 1
-      ',': '@', // 2
-      '.': '#', // 3
-
-      ']': '*', // 8
-
-      '␣': '_',
-      '⏎': '+',
-    } as const)((k, v) => map(k).to(toSymbol[v])),
+    withMapper(symbolKeys)((k, v) => map(k).to(toSymbol[v])),
 
     { "'": toKey('⌫') },
   ])
@@ -447,31 +414,9 @@ N   M  ,   .     J  K  L    U  I  O    P  ;   /  ]    [      '   H   Y    \\`
   let layer = duoLayer('d', ';').threshold(250).notification(hint)
   return layer.manipulators([
     // digits keypad_{i}
-    withMapper([
-      'n', //             // 0
-      ...['m', ',', '.'], // 1 2 3
-      ...['j', 'k', 'l'], // 4 5 6
-      ...['u', 'i', 'o'], // 7 8 9
-    ] as const)((k, i) => map(k).to(`keypad_${i as 0}`)),
+    withMapper(digitKeys)((k, i) => map(k).to(`keypad_${i as 0}`)),
 
-    // + - / * .
-    {
-      p: toKey('=', '⇧'), // +
-      ';': toKey('-'), // // -
-      // / stay           // /
-      ']': toKey(8, '⇧'), // *
-
-      '[': toKey('keypad_period'),
-    },
-
-    // delete ⌫ ⌦
-    {
-      '\\': toKey('⌦'),
-
-      "'": toKey('⌫'),
-      h: toKey('⌫', '⌥'),
-      y: toKey('⌫', '⌘'),
-    },
+    toDigitExtras,
 
     // F1 - F9
     withMapper([1, 2, 3, 4, 5, 6, 7, 8, 9])((k) => map(k).to(`f${k}`)),
@@ -488,11 +433,11 @@ function layer_snippet() {
       map(k).toPaste(k),
     ),
 
-    withCondition(ifApp('^com.microsoft.VSCode$'))([
+    withCondition(ifApp('^com\\.microsoft\\.VSCode$'))([
       map('k').to('f20').to('k'),
       map('l').to('f20').to('l'),
     ]),
-    withCondition(ifApp('^com.jetbrains.WebStorm$'))([
+    withCondition(ifApp('^com\\.jetbrains\\.WebStorm$'))([
       map('k').toTypeSequence('afun'),
     ]),
     map('k').toTypeSequence('()␣=>␣'),
@@ -529,7 +474,7 @@ function layer_system() {
 }
 
 function app_chrome() {
-  return rule('Chrome', ifApp('^com.google.Chrome$')).manipulators(
+  return rule('Chrome', ifApp('^com\\.google\\.Chrome$')).manipulators(
     appCommons({
       history: true,
       tab: true,
@@ -540,13 +485,12 @@ function app_chrome() {
         '›⌘': toKey('i', '⌘⌥'), // developerTools
         '›⌥': toKey('a', '⌘⇧'), // searchTabs
       },
-      appendExtras: [appResize('Google Chrome')],
     }),
   )
 }
 
 function app_safari() {
-  return rule('Safari', ifApp('^com.apple.Safari$')).manipulators(
+  return rule('Safari', ifApp('^com\\.apple\\.Safari$')).manipulators(
     appCommons({
       history: true,
       tab: true,
@@ -557,13 +501,15 @@ function app_safari() {
 
         '›⌘': toKey('i', '⌘⌥'), // showWebInspector
       },
-      appendExtras: [appResize('Safari')],
     }),
   )
 }
 
 function app_jetBrainsIDE() {
-  return rule('JetBrains IDE', ifApp('^com.jetbrains.[\\w-]+$')).manipulators(
+  return rule(
+    'JetBrains IDE',
+    ifApp('^com\\.jetbrains\\.[\\w-]+$'),
+  ).manipulators(
     appCommons({
       history: true,
       tab: true,
@@ -577,15 +523,13 @@ function app_jetBrainsIDE() {
         '›⌥': toKey('a', '⌘⇧'), // findAction
         '›⌃': toKey('e', '⌘'), // recentFiles
       },
-      appendExtras: [
-        map('⎋', '⌘').to('⎋', '⌘⇧'),
-      ],
+      appendExtras: [map('⎋', '⌘').to('⎋', '⌘⇧')],
     }),
   )
 }
 
 function app_zed() {
-  return rule('Zed', ifApp('^dev.zed.Zed$')).manipulators(
+  return rule('Zed', ifApp('^dev\\.zed\\.Zed$')).manipulators(
     appCommons({
       history: true,
       tab: true,
@@ -599,38 +543,31 @@ function app_zed() {
         '›⌥': toKey('a', '⌘⇧'), // command
         '›⌃': toKey('p', '⌘'), // fileFinder
       },
-      appendExtras: [
-        map('⎋', '⌘').to('⎋', '⌘⇧'),
-        appResize('Zed'),
-      ],
+      appendExtras: [map('⎋', '⌘').to('⎋', '⌘⇧')],
     }),
   )
 }
 
 function app_vsCode() {
-  return rule('VSCode', ifApp('^com.microsoft.VSCode$')).manipulators(
+  return rule('VSCode', ifApp('^com\\.microsoft\\.VSCode$')).manipulators(
     appCommons({
       tab: true,
       switcher: true,
-      prependExtras: [
-        map('h', '⌃').to('-', '⌃'),
-        map('l', '⌃').to('-', '⌃⇧'),
-      ],
+      prependExtras: [map('h', '⌃').to('-', '⌃'), map('l', '⌃').to('-', '⌃⇧')],
       taps: {
-        '‹⌘': toKey('⎋', '⌘'), // Tobble Sidebar visibility
+        '‹⌘': toKey('⎋', '⌘'), // Toggle Sidebar visibility
         '‹⌥': toKey('r', '⌥⇧'), // Run
 
         '›⌘': toKey('`', '⌃'), // terminal
         '›⌥': toKey('p', '⌘⇧'), // Show Command Palette
         '›⌃': toKey('p', '⌘'), // Quick Open, Go to File...
       },
-      appendExtras: [appResize('Code')],
     }),
   )
 }
 
 function app_slack() {
-  return rule('Slack', ifApp('^com.tinyspeck.slackmacgap$')).manipulators(
+  return rule('Slack', ifApp('^com\\.tinyspeck\\.slackmacgap$')).manipulators(
     appCommons({
       history: true,
       taps: {
@@ -642,13 +579,15 @@ function app_slack() {
       },
       // After the 1/4 width, leave some space for opening thread in a new
       // window before the last 1/4 width
-      appendExtras: [appResize('Slack', { x: 1263, y: 25 }, { w: 1760, h: 1415 })],
+      appendExtras: [
+        map(1, 'Meh').to(toResizeWindow({ x: 0.25, w: 0.34, top: 25 })),
+      ],
     }),
   )
 }
 
 function app_zoom() {
-  return rule('Zoom', ifApp('^us.zoom.xos$')).manipulators(
+  return rule('Zoom', ifApp('^us\\.zoom\\.xos$')).manipulators(
     appCommons({
       taps: {
         '‹⌘': toKey('a', '⌘⇧'), // muteUnmuteMyAudio
@@ -661,8 +600,8 @@ function app_zoom() {
   )
 }
 
-function app_raycast() {
-  return rule('Raycast').manipulators([
+function windowManagement() {
+  return rule('Window Management').manipulators([
     withModifier('Hyper')({
       '↑': raycastWin('previous-display'),
       '↓': raycastWin('next-display'),
@@ -678,8 +617,8 @@ function app_raycast() {
       9: raycastWin('left-half'),
       0: raycastWin('right-half'),
     }),
+    map(1, 'Meh').to(toResizeWindow()),
     withModifier('Meh')({
-      1: raycastWin('first-fourth'),
       2: raycastWin('second-fourth'),
       3: raycastWin('third-fourth'),
       4: raycastWin('last-fourth'),

@@ -85,7 +85,10 @@ function escapeBindings(
   vars: string[],
 ): Manipulator[] {
   let conds = Array.isArray(conditions) ? conditions : [conditions]
-  let toEvents = vars.flatMap((v) => [toUnsetVar(v), toRemoveNotificationMessage(v)])
+  let toEvents = vars.flatMap((v) => [
+    toUnsetVar(v),
+    toRemoveNotificationMessage(v),
+  ])
   return withCondition(...conds)(
     (['⎋', '⇪'] as const).map((esc) => map(esc).to(toEvents)),
   )
@@ -102,7 +105,9 @@ function escapeBindings(
  */
 export function createHyperLayer<C extends HyperConfig>(sublayers: C) {
   let subKeys = Object.keys(sublayers) as Array<Extract<keyof C, string>>
-  let topHint = formatTopHint(subKeys.map((k) => ({ key: k, name: sublayers[k].name })))
+  let topHint = formatTopHint(
+    subKeys.map((k) => ({ key: k, name: sublayers[k].name })),
+  )
 
   let layerRule = layer('⇪', 'hyper')
     .configKey((m) => m.toIfAlone(toKey('⎋')), true)
@@ -131,7 +136,9 @@ export function createHyperLayer<C extends HyperConfig>(sublayers: C) {
     manipulators.push(activation)
 
     // Sublayer bindings: each mapped letter fires action while sub var = 1.
-    let entries = Object.keys(sub.mapping) as Array<Extract<keyof typeof sub.mapping, string>>
+    let entries = Object.keys(sub.mapping) as Array<
+      Extract<keyof typeof sub.mapping, string>
+    >
     manipulators.push(
       ...withCondition(ifVar(subVar, 1))(
         entries.map((letter) =>
@@ -170,7 +177,9 @@ export function createLeaderLayer(config: LeaderConfig): RuleBuilder {
   let clearLeaderVar = [toUnsetVar(_var), toRemoveNotificationMessage(_var)]
 
   let keys = Object.keys(config) as Array<Extract<keyof LeaderConfig, string>>
-  let topHint = formatTopHint(keys.map((k) => ({ key: k, name: config[k].name })))
+  let topHint = formatTopHint(
+    keys.map((k) => ({ key: k, name: config[k].name })),
+  )
 
   return rule('Leader Key').manipulators([
     // 0: Inactive -> Leader (1)
@@ -189,7 +198,9 @@ export function createLeaderLayer(config: LeaderConfig): RuleBuilder {
         let subHint = formatSubHint(config[k].mapping, (v) =>
           Array.isArray(v) ? v[1] : v,
         )
-        return map(k as FromKeyParam).toVar(_var, k).toNotificationMessage(_var, subHint)
+        return map(k as FromKeyParam)
+          .toVar(_var, k)
+          .toNotificationMessage(_var, subHint)
       }),
     ),
 
@@ -201,7 +212,9 @@ export function createLeaderLayer(config: LeaderConfig): RuleBuilder {
         actionKeys.map((x) => {
           let raw = mapping[x]
           let v = Array.isArray(raw) ? raw[0] : raw
-          return map(x as FromKeyParam).to(action(v)).to(clearLeaderVar)
+          return map(x as FromKeyParam)
+            .to(action(v))
+            .to(clearLeaderVar)
         }),
       )
     }),
